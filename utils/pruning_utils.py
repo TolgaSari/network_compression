@@ -42,3 +42,15 @@ class SparseLayer(collections.namedtuple('SparseLayer',
 
     """An auxilary class to represent sparse layer"""
     pass
+
+def quantify(values,fixLoc):
+    # A naive linear quantizier
+    halfFix = fixLoc - 1
+    neg_bins = np.array([-x/2**halfFix for x in reversed(range(2**halfFix))])[:-1]
+    pos_bins = np.array([x/2**halfFix for x in range(2**halfFix)])
+    bins = np.concatenate((neg_bins, pos_bins))
+    centers = (bins[1:]+bins[:-1])/2
+
+    res = bins[np.digitize(values, centers)]
+    return res.astype(np.float32)
+    

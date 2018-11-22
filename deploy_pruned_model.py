@@ -38,8 +38,14 @@ print('Accuracy on test with dense model (pruned): {accuracy}, loss on test: {lo
 weight_matrices, biases = classifier.sess.run([classifier.weight_matrices,
                                                classifier.biases])
 sparse_layers = []
+
+fixLoc = 4
+
 # turn dense pruned weights into sparse indices and values
 for weights, bias in zip(weight_matrices, biases):
+
+    weights = pruning_utils.quantify(weights,fixLoc)
+    bias = pruning_utils.quantify(bias,fixLoc)
 
     values, indices = pruning_utils.get_sparse_values_indices(weights)
     shape = np.array(weights.shape).astype(np.int64)
