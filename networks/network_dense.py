@@ -1,6 +1,7 @@
 from typing import Union
 
 import tensorflow as tf
+import numpy as np
 from tqdm import tqdm
 
 from networks.network_base import BaseNetwork
@@ -308,3 +309,48 @@ class FullyConnectedClassifier(BaseNetwork):
     
     def getParams(self):
         return self.number_of_parameters(tf.trainable_variables())
+    
+    def calc_tensor(self, tensor_in, weights_in, biases_in):
+        npDot = np.dot
+        npAdd = np.add
+        array = np.zeros((tensor_in.shape[0],weights_in.shape[1]))
+        for i in range(tensor_in.shape[0]):
+            a = npDot(tensor_in[i], weights_in)
+            b = npAdd(a, biases_in)
+            array[i] = b
+        return array
+       # return [ npAdd(npDot(tensor_in[i,:],weights_in),biases_in)
+        #        for i in range(tensor_in.shape[0]) ] 
+ #   def softmax(vector_in):
+  #      return np.exp(tensor_in) / np.sum(np.exp(tensor_in), axis=0)
+    def softmax(self,batch_in):
+        return list(map(lambda tensor_in: np.exp(tensor_in)
+                        / np.sum(np.exp(tensor_in), axis=0),
+                        batch_in))
+        
+    def ReLu(self,array_in):
+        return [list(map(lambda x: max(x,0), array_in[i]))
+                for i in range(len(array_in[:,0]))]
+    
+    def bareEval(self, data_provider, batch_size):
+        
+        weight_matrices, bias_vectors = self.sess.run([self.weight_matrices,
+                                               self.biases])
+        n_iterations = data_provider.num_examples // batch_size
+        #buffer = np.array((28**2,batch_size)) # This will hold data between layers
+        
+        for iteration in range(n_iterations):
+            images, labels = data_provider.next_batch(batch_size)
+            temp = self.calc_tensor(images, weight_matrices[0], bias_vectors[0])
+            for weights, biases in zip(weight_matrices[1:], bias_vectors[1:]):
+                temp = self.calc_tensor(temp, weights, biases)
+                temp = self.ReLu(temp)
+            
+            list(map(lambda x: (2*x)//1, self.softmax(temp)))
+            list(filter(lambda x: ))
+            
+            
+            
+            
+            
+            
