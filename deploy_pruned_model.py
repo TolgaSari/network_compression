@@ -39,7 +39,7 @@ weight_matrices, biases = classifier.sess.run([classifier.weight_matrices,
                                                classifier.biases])
 sparse_layers = []
 
-fixLoc = 4
+fixLoc = 6
 
 # turn dense pruned weights into sparse indices and values
 for weights, bias in zip(weight_matrices, biases):

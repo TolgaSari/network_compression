@@ -316,9 +316,17 @@ class FullyConnectedClassifier(BaseNetwork):
         with open(filename, "w") as file:
             for weights, biases in zip(weight_matrices, bias_vectors):
                 for i in biases.flatten():
-                    file.write(i.astype(str))
+                    file.write(self.fixPoint(i) + '\n')
                 for i in weights.flatten():
-                    file.write(i.astype(str))
+                    file.write(self.fixPoint(i) + '\n')
+    def fixPoint(self, number):
+        fixloc = 6
+        x = number * 2**fixloc
+        if x < 0:
+            temp = -x + 128
+        else:
+            temp = x
+        return "8'd" + str(int(temp))
     
     def calc_tensor(self, tensor_in, weights_in, biases_in):
         npDot = np.dot

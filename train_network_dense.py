@@ -21,7 +21,7 @@ classifier = network_dense.FullyConnectedClassifier(input_size=config.input_size
                                                     dropout=config.dropout,
                                                     weight_decay=config.weight_decay,
                                                     activation_fn=config.activation_fn,
-													dtype=tf.int8)
+													)
 
 # than train it
 classifier.fit(n_epochs=config.n_epochs,

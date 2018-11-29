@@ -4,7 +4,7 @@ class ConfigNetworkDense:
 
     input_size = 28 * 28
     n_classes = 10
-    layer_sizes = [512, 512]
+    layer_sizes = [10, 10]
     dropout = 0.5
     weight_decay = 0.0005
     activation_fn = tf.nn.relu
@@ -27,7 +27,7 @@ class ConfigNetworkDensePruned:
 
     input_size = 28 * 28
     n_classes = 10
-    layer_sizes = [512, 512]
+    layer_sizes = [10, 10] # 512,512
     dropout = 0
     weight_decay = 0.0001
     activation_fn = tf.nn.relu
