@@ -310,6 +310,16 @@ class FullyConnectedClassifier(BaseNetwork):
     def getParams(self):
         return self.number_of_parameters(tf.trainable_variables())
     
+    def export(self, filename):
+        weight_matrices, bias_vectors = self.sess.run([self.weight_matrices,
+                                               self.biases])
+        with open(filename, "w") as file:
+            for weights, biases in zip(weight_matrices, bias_vectors):
+                for i in biases.flatten():
+                    file.write(i.astype(str))
+                for i in weights.flatten():
+                    file.write(i.astype(str))
+    
     def calc_tensor(self, tensor_in, weights_in, biases_in):
         npDot = np.dot
         npAdd = np.add
@@ -347,7 +357,7 @@ class FullyConnectedClassifier(BaseNetwork):
                 temp = self.ReLu(temp)
             
             list(map(lambda x: (2*x)//1, self.softmax(temp)))
-            list(filter(lambda x: ))
+            #list(filter(lambda x: ))
             
             
             
