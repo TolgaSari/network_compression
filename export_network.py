@@ -40,6 +40,6 @@ classifier.load_model()
  #                                                    classifier.biases])
             
 #classifier.export = export
-classifier.export('test.txt')
+classifier.export('test.txt','verilog')
 with open('test.txt','r') as f:
     a = f.read()

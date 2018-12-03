@@ -27,4 +27,4 @@ def plot_histogram(weights_list: list,
     ax.set_xlabel('Weights values')
     ax.set_ylabel('Number of weights')
 
-    fig.savefig(image_name + '.png')
+    fig.savefig('pics/' + image_name + '.png')

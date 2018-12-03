@@ -310,17 +310,41 @@ class FullyConnectedClassifier(BaseNetwork):
     def getParams(self):
         return self.number_of_parameters(tf.trainable_variables())
     
-    def export(self, filename):
+    def export(self, filename, target):
         weight_matrices, bias_vectors = self.sess.run([self.weight_matrices,
                                                self.biases])
-        with open(filename, "w") as file:
-            for weights, biases in zip(weight_matrices, bias_vectors):
-                for i in biases.flatten():
-                    file.write(self.fixPoint(i) + '\n')
-                for i in weights.flatten():
-                    file.write(self.fixPoint(i) + '\n')
-    def fixPoint(self, number):
-        fixloc = 6
+        paramCount = 0
+        if(target == "verilog"):
+            with open(filename, "w") as file:
+                file.write("16'd" + str(len(weight_matrices)) + '\n')
+                for i in weight_matrices:
+                    for j in i.shape:
+                        file.write("16'd" + str(j) + '\n')
+                for weights, biases in zip(weight_matrices, bias_vectors):
+                    for i in biases.flatten():
+                        paramCount += 1
+                        file.write(self.fixPoint(i) + '\n')
+                    for i in weights.flatten():
+                        paramCount += 1
+                        file.write(self.fixPoint(i) + '\n')
+        elif(target == "C"):
+            with open(filename, "w") as file:
+                file.write(str(len(weight_matrices)) + '\n')
+                for i in weight_matrices:
+                    for j in i.shape:
+                        file.write(str(j) + '\n')
+                for weights, biases in zip(weight_matrices, bias_vectors):
+                    for i in biases.flatten():
+                        paramCount += 1
+                        file.write(str(i) + '\n')
+                    for i in weights.flatten():
+                        paramCount += 1
+                        file.write(str(i) + '\n')
+        
+        print('Total parameter count is:', paramCount)
+        
+    def fixPoint(self, number, fixloc = 6):
+        #fixloc = 6
         x = number * 2**fixloc
         if x < 0:
             temp = -x + 128

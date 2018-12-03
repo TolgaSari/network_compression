@@ -5,8 +5,7 @@
 int main()
 {
     matrix *mat = create_matrix(2,2);
-
-    vector *vec = create_vector(2);
+s    vector *vec = create_vector(2);
     vector *outVec = create_vector(2);
 
     DATA_TYPE arr[2] = { 2, 2};
