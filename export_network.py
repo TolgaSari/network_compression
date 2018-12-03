@@ -43,3 +43,11 @@ classifier.load_model()
 classifier.export('test.txt','verilog')
 with open('test.txt','r') as f:
     a = f.read()
+
+with open('mnist_samples.txt','w') as f:
+    for sample in list(mnist[2].images):
+        for i in sample:
+            f.write(str(i) + ',')
+        f.write('\n')
+    
+    
