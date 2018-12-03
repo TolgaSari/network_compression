@@ -38,6 +38,7 @@ print('Accuracy on test with dense model (pruned): {accuracy}, loss on test: {lo
 weight_matrices, biases = classifier.sess.run([classifier.weight_matrices,
                                                classifier.biases])
 sparse_layers = []
+layers = []
 
 fixLoc = 6
 
@@ -46,7 +47,9 @@ for weights, bias in zip(weight_matrices, biases):
 
     weights = pruning_utils.quantify(weights,fixLoc)
     bias = pruning_utils.quantify(bias,fixLoc)
-
+    
+    layers.append(weights)
+    
     values, indices = pruning_utils.get_sparse_values_indices(weights)
     shape = np.array(weights.shape).astype(np.int64)
     sparse_layers.append(pruning_utils.SparseLayer(values=values.astype(np.float32),
@@ -74,6 +77,10 @@ print('Accuracy on test with sparse model: {accuracy}, loss on test: {loss}'.for
 
 compRatio = (classifier.params-sparse_classifier.params)/classifier.params*100
 print('Compression ratio = ', compRatio, '%')
+
+plot_utils.plot_histogram(layers,
+                          'weights_distribution_before_pruning',
+                          include_zeros=False)
 
 # finally, save a sparse model
 sparse_classifier.save_model()

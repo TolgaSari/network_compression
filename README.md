@@ -5,9 +5,11 @@
 - [X] Compression for small network.
 - [X] Naive linear quantization to fixed size in float format.
 - [ ] Forward pass implementation.
-- [ ] Data exporting.
+- [X] Data exporting.
 - [ ] SIMD ISA.
-- [ ] SIMD decoder, data fetcher.
+- [ ] Address skipping.
+- [ ] SIMD decoder
+- [ ] Data fetcher.
 - [ ] SIMD MAC unit.
 
 ## Documentation:

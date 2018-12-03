@@ -21,7 +21,7 @@ def plot_histogram(weights_list: list,
             facecolor='green',
             edgecolor='black',
             alpha=0.7,
-            range=(-0.15, 0.15))
+            range=(-1, 1))
 
     ax.set_title('Weights distribution')
     ax.set_xlabel('Weights values')
