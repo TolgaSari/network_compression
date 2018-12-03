@@ -14,6 +14,6 @@
 
 ## Documentation:
 - [X] Histograms, and time measurements.
-- [ ] Histograms for quantization.
+- [X] Histograms for quantization.
 - [ ] SIMD ISA and specifications.
 - [ ] Sample thesis start.
