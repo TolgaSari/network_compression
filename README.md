@@ -6,6 +6,7 @@
 - [X] Naive linear quantization to fixed size in float format.
 - [X] Weight exporting. (In float form)
 - [X] Image exporting. (In float form)
+- [X] Label exporting.
 - [X] Data importing in C. (In float form)
 - [ ] Forward pass implementation. (In float form)
 - [ ] Fixed point conversion.

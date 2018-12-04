@@ -49,5 +49,11 @@ with open('mnist_samples.txt','w') as f:
         for i in sample:
             f.write(str(i) + ' ')
         f.write('\n')
+
+with open('mnist_labels.txt','w') as f:
+    for label in list(mnist[2].labels):
+        f.write(str(label) + ' ')
+    f.write('\n')
+
     
     
