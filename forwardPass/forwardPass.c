@@ -16,7 +16,14 @@ int main()
     printf("dude what \n");
     
     create_network("network_data/weights.txt", nn);
-
-
+    int x = 0;
+    
+    printf("%f\n", nn->biases[0].data[x++]);
+    printf("%f\n", nn->biases[0].data[x++]);
+    printf("%f\n", nn->biases[0].data[x++]);
+    printf("%f\n", nn->biases[0].data[x++]);
+    printf("%f\n", nn->biases[0].data[x++]);
+    
+	
     return 0;
 }

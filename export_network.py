@@ -53,5 +53,6 @@ with open('mnist_labels.txt','w') as f:
         f.write(str(label) + ' ')
     f.write('\n')
 
+a = classifier.biases
     
     

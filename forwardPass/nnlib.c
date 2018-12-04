@@ -146,10 +146,12 @@ void create_network(char* file_name, network* nn)
 {
     int layer_count;
     int x;
-    
+    int row, col;
     matrix* new_layer;
     
     FILE *f = fopen(file_name, "r");
+    
+    DATA_TYPE read_data;
     
     if(f == NULL)
     {
@@ -161,17 +163,35 @@ void create_network(char* file_name, network* nn)
         
         nn->layer_count = layer_count;
         nn->layers = malloc(layer_count * sizeof(matrix));
+        nn->biases = malloc(layer_count * sizeof(vector));
         for(x = 0; x < layer_count; x++)
         {
-            fscanf(f, "%d", &nn->layers[x].shape[0]);
-            fscanf(f, "%d", &nn->layers[x].shape[1]);
-            printf("%2d. layer = (%4d, %4d)\n", x,  nn->layers[x].shape[0],
+            fscanf(f, "%d \n %d", &row, &col);
+            nn->layers[x] = *create_matrix(row, col);
+            nn->biases[x] = *create_vector(col);
+            printf("%2d. layer = (%3d, %3d)\n", x,  nn->layers[x].shape[0],
                                                     nn->layers[x].shape[1]);
         }
-        
+        // Data is in form of:
+        // layer_count, layer1_shape, layer2_shape ...
+        // layer1_biases, layer1_weights, layer2_biases
         for(x = 0; x < layer_count; x++)
         {
-            new_layer = &nn->layers[x];
+            for(col = 0; col < nn->layers[x].shape[1]; col++)
+            {
+                printf("%d\n",col);
+                fscanf(f, READ_STR, &read_data);
+                nn->biases[x].data[col] = read_data;
+            }
+            
+            for(row = 0; row < nn->layers[x].shape[0]; row++)
+            {
+                for (col = 0; col < nn->layers[x].shape[1]; col++)
+                {
+                    fscanf(f, READ_STR, &read_data);
+                    nn->layers[x].data[row][col] = read_data;
+                }
+            }
         }
     }
 }

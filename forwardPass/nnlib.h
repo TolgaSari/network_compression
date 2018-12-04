@@ -2,6 +2,7 @@
 #define DATA_TYPE float
 #define PRINT_TYPE 0 // 0 for DATA_TYPE = 1
 #define PRINT_STR "%f "//"%d "
+#define READ_STR "%f"
 
 #define RELU(x) x = x > 0 ? x : 0
 
@@ -20,6 +21,7 @@ typedef struct
 typedef struct
 {
     int layer_count;
+    vector *biases;
     matrix *layers;
 } network;
 
