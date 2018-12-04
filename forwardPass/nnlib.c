@@ -13,6 +13,21 @@ void relu(vector *vec)
     }
 }
 
+void layer_pass(matrix* layer, vector* bias, vector* input, vector* output)
+{
+    int x, y;
+    //matrix_print(layer);
+    //vector_print(input);
+    for (x = 0; x < layer->shape[1]; x++)// columns of layer matrix = output nodes
+    {
+        for (y = 0; y < layer->shape[0]; y++)// rows of the layer matrix = input nodes
+        {
+            output->data[x] += input->data[y] * layer->data[x][y];
+        }
+        output->data[x] += bias->data[x];
+    }
+}
+
 void layer_pass(vector * inVec, matrix * mat, vector * outVec)
 {
     int j,k;
@@ -39,20 +54,19 @@ void layer_pass(vector * inVec, matrix * mat, vector * outVec)
     }
 }
 
-void vec_print(vector * vec)
+void vector_print(vector * vec)
 {
     int j;
     printf("Vector:\n\n");
     printf("| ");
     for(j = 0; j < vec->len; j++)
     {
-        
         printf(PRINT_STR, vec->data[j]);
     }
     printf("|\n\n");
 }
 
-void mat_print(matrix *mat)
+void matrix_print(matrix *mat)
 {
     int j,k;
     printf("Matrix :\n\n");
@@ -66,24 +80,6 @@ void mat_print(matrix *mat)
         printf("| \n");
     }
     printf("\n");
-}
-
-double **dmatrix(int nrl, int nrh, int ncl, int nch)
-/* allocate a double matrix with subscript range m[nrl..nrh][ncl..nch] */
-{
-	int i,nrow=nrh-nrl+1,ncol=nch-ncl+1;
-	double **m;
-	/* allocate pointers to rows */
-	m=(double **) malloc((size_t)((nrow+NR_END)*sizeof(double*)));
-	m += NR_END;
-	m -= nrl;
-	/* allocate rows and set pointers to them */
-	m[nrl]=(double *) malloc((size_t)((nrow*ncol+NR_END)*sizeof(double)));
-	m[nrl] += NR_END;
-	m[nrl] -= ncl;
-	for(i=nrl+1;i<=nrh;i++) m[i]=m[i-1]+ncol;
-	/* return pointer to array of pointers to rows */
-	return m;
 }
 
 matrix *create_matrix(int nrow, int ncol)
@@ -108,15 +104,20 @@ vector *create_vector(int len)
     return v;
 }
 
-double *dvector(int nl, int nh)
-/* allocate a double vector with subscript range v[nl..nh] */
+vector* create_vector_list(int count, int len)
 {
-	double *v;
-	v=(double *)malloc((size_t) ((nh-nl+1+NR_END)*sizeof(double)));
-	return v-nl+NR_END;
+    int x, y;
+    vector* vec = malloc(count * sizeof(vector));
+    
+    for(x = 0; x < count; x++)
+    {
+        vec[x] = *create_vector(len);
+    }
+    
+    return vec;
 }
 
-void read_image(char* file_name, int sample_size, int image_size, DATA_TYPE** image)
+void read_image(char* file_name, int sample_size, int image_size, vector* images)
 {
 	FILE *f;
 	f = fopen(file_name, "r");
@@ -135,7 +136,7 @@ void read_image(char* file_name, int sample_size, int image_size, DATA_TYPE** im
             {
                 //printf("%d",x);
                 fscanf(f, "%f", &pixel); // For float
-                image[y][x] = pixel;
+                images[y].data[x] = pixel;
             }
         }
         fclose(f);
@@ -194,19 +195,4 @@ void create_network(char* file_name, network* nn)
             }
         }
     }
-}
-
-void write_image(char* file_name, int im_row, int im_col, double**image)
-{
-	FILE *image_text;
-	image_text = fopen(file_name, "w");
-	int x, y;
-	for (x = 1; x <= im_row; x++)
-	{
-		for (y = 1; y <= im_col; y++)
-		{
-			fprintf(image_text, "%d\n", (int)image[x][y]);
-		}
-	}
-	fclose(image_text);
 }

@@ -27,9 +27,13 @@ typedef struct
 
 void relu(vector *vec);
 void layer_pass(vector *inVec, matrix *mat, vector *outVec);
-void vec_print(vector *vec);
-void mat_print(matrix *mat);
-vector* create_vector(int len);
-matrix* create_matrix(int row, int col);
-void read_image(char* file_name, int sample_size, int image_size, DATA_TYPE** image);
+void vector_print(vector *vec);
+void matrix_print(matrix *mat);
+void read_image(char* file_name, int sample_size, int image_size, vector* image);
 void create_network(char* file_name, network* nn);
+void forward_pass(matrix* layer, vector* bias, vector* input, vector* output);
+
+vector* create_vector_list(int count, int len);
+vector* create_vector(int len);
+
+matrix* create_matrix(int row, int col);

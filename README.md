@@ -8,6 +8,7 @@
 - [X] Image exporting. (In float form)
 - [X] Label exporting.
 - [X] Data importing in C. (In float form)
+- [X] Layer pass. (In float form)
 - [ ] Forward pass implementation. (In float form)
 - [ ] Fixed point conversion.
 - [ ] Fixed point multiply accumulate.
