@@ -1,4 +1,4 @@
-#define DATA_TYPE int
+#define DATA_TYPE float
 
 #define RELU(x) x = x > 0 ? x : 0
 
@@ -20,3 +20,4 @@ void vec_print(vector *vec);
 void mat_print(matrix *mat);
 vector* create_vector(int len);
 matrix* create_matrix(int row, int col);
+void read_image(char* file_name, int sample_size, int image_size, DATA_TYPE** image);

@@ -116,31 +116,51 @@ double *dvector(int nl, int nh)
 	return v-nl+NR_END;
 }
 
-void read_image(char* file_name, int im_row, int im_col, double** image)
+void read_image(char* file_name, int sample_size, int image_size, DATA_TYPE** image)
 {
-	FILE *image_text;
-	image_text = fopen(file_name, "r");
-	int x, y, pixel;
+	FILE *f;
+	f = fopen(file_name, "r");
+	int x, y;
 	int counter = 0;
-	for (x = 1; x <= im_row;x++)
-	{
-		for (y = 1; y <= im_col;y++)
-		{
-			fscanf(image_text, "%d", &pixel);
-
-			if (pixel == EOF)
-			{
-				x = im_row;
-				y = im_col;
-				break;
-			}
-			else
-			{
-				image[x][y] = (double)pixel;
-			}
-		}
-	}
-	fclose(image_text);
+    float pixel;
+    if (f == NULL)
+    {
+        perror("Failed: ");
+    }
+    else
+    {
+        for (y = 0; y < sample_size; y++)
+        {
+            for (x = 0; x < image_size; x++)
+            {
+                //printf("%d",x);
+                fscanf(f, "%f", &pixel); // For float
+//                printf("%d\n", y);
+                image[y][x] = pixel;
+            }
+        }
+    
+    ///////////////
+//    for (x = 1; x <= im_row;x++)
+//    {
+//        for (y = 1; y <= im_col;y++)
+//        {
+//            fscanf(image_text, "%d", &pixel);
+//
+//            if (pixel == EOF)
+//            {
+//                x = im_row;
+//                y = im_col;
+//                break;
+//            }
+//            else
+//            {
+//                image[x][y] = (double)pixel;
+//            }
+//        }
+//    }
+        fclose(f);
+    }
 }
 
 void write_image(char* file_name, int im_row, int im_col, double**image)
