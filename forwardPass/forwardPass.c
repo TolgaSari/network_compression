@@ -30,7 +30,7 @@ int main()
     read_image("mnist_samples.txt", 10000, 784, images->data);
 //    matrix *images = create_matrix(1, 4);
 //    read_image("test.txt", 1, 4, images->data);
-    printf("%f %f %f %f",   images->data[1000][0], images->data[1000][290],
+    printf("%f %f %f %f\n",   images->data[1000][0], images->data[1000][290],
                             images->data[1000][270], images->data[1000][300]);
 
 //    free(vec);
