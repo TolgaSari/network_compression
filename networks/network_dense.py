@@ -327,7 +327,7 @@ class FullyConnectedClassifier(BaseNetwork):
                     for i in weights.flatten():
                         paramCount += 1
                         file.write(self.fixPoint(i) + '\n')
-        elif(target == "C"):
+        elif(target == "C" or "c"):
             with open(filename, "w") as file:
                 file.write(str(len(weight_matrices)) + '\n')
                 for i in weight_matrices:

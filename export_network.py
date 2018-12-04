@@ -40,9 +40,7 @@ classifier.load_model()
  #                                                    classifier.biases])
             
 #classifier.export = export
-classifier.export('test.txt','verilog')
-with open('test.txt','r') as f:
-    a = f.read()
+classifier.export('weights.txt','c')
 
 with open('mnist_samples.txt','w') as f:
     for sample in list(mnist[2].images):

@@ -12,6 +12,7 @@
 - [ ] Fixed point conversion.
 - [ ] Fixed point multiply accumulate.
 - [ ] Forward pass with fixed point.
+- [ ] Forward pass with memory access model.
 - [ ] SIMD ISA.
 - [ ] Address skipping.
 - [ ] SIMD decoder

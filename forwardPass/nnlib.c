@@ -46,7 +46,8 @@ void vec_print(vector * vec)
     printf("| ");
     for(j = 0; j < vec->len; j++)
     {
-        printf("%d ", vec->data[j]);
+        
+        printf(PRINT_STR, vec->data[j]);
     }
     printf("|\n\n");
 }
@@ -60,7 +61,7 @@ void mat_print(matrix *mat)
         printf("| ");
         for (k = 0; k < mat->shape[1]; k++)
         {
-            printf("%d ", mat->data[j][k]);
+            printf(PRINT_STR, mat->data[j][k]);
         }
         printf("| \n");
     }
@@ -89,7 +90,6 @@ matrix *create_matrix(int nrow, int ncol)
 {
     int i;
     matrix *m = (matrix *) malloc(sizeof(matrix));
-    m->shape  = (int *) malloc(2*sizeof(int));
     m->shape[0] = nrow;
     m->shape[1] = ncol;
     DATA_TYPE **mat;
@@ -135,31 +135,44 @@ void read_image(char* file_name, int sample_size, int image_size, DATA_TYPE** im
             {
                 //printf("%d",x);
                 fscanf(f, "%f", &pixel); // For float
-//                printf("%d\n", y);
                 image[y][x] = pixel;
             }
         }
-    
-    ///////////////
-//    for (x = 1; x <= im_row;x++)
-//    {
-//        for (y = 1; y <= im_col;y++)
-//        {
-//            fscanf(image_text, "%d", &pixel);
-//
-//            if (pixel == EOF)
-//            {
-//                x = im_row;
-//                y = im_col;
-//                break;
-//            }
-//            else
-//            {
-//                image[x][y] = (double)pixel;
-//            }
-//        }
-//    }
         fclose(f);
+    }
+}
+
+void create_network(char* file_name, network* nn)
+{
+    int layer_count;
+    int x;
+    
+    matrix* new_layer;
+    
+    FILE *f = fopen(file_name, "r");
+    
+    if(f == NULL)
+    {
+        perror("Failed: ");
+    }
+    else
+    {
+        fscanf(f, "%d", &layer_count);
+        
+        nn->layer_count = layer_count;
+        nn->layers = malloc(layer_count * sizeof(matrix));
+        for(x = 0; x < layer_count; x++)
+        {
+            fscanf(f, "%d", &nn->layers[x].shape[0]);
+            fscanf(f, "%d", &nn->layers[x].shape[1]);
+            printf("%2d. layer = (%4d, %4d)\n", x,  nn->layers[x].shape[0],
+                                                    nn->layers[x].shape[1]);
+        }
+        
+        for(x = 0; x < layer_count; x++)
+        {
+            new_layer = &nn->layers[x];
+        }
     }
 }
 

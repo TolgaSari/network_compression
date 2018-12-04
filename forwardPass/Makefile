@@ -7,6 +7,9 @@ DEPS = nnlib.h
 
 forwardPass: forwardPass.o nnlib.o
 	$(CC) -o forwardPass forwardPass.o nnlib.o
+	make clean
+
+.PHONY: clean
 
 clean:
 	rm *.o
