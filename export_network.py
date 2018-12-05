@@ -41,18 +41,18 @@ classifier.load_model()
             
 #classifier.export = export
 classifier.export('weights.txt','c')
-
-with open('mnist_samples.txt','w') as f:
-    for sample in list(mnist[2].images):
-        for i in sample:
-            f.write(str(i) + ' ')
-        f.write('\n')
-
-with open('mnist_labels.txt','w') as f:
-    for label in list(mnist[2].labels):
-        f.write(str(label) + ' ')
-    f.write('\n')
-
-a = classifier.biases
+#
+#with open('mnist_samples.txt','w') as f:
+#    for sample in list(mnist[2].images):
+#        for i in sample:
+#            f.write(str(i) + ' ')
+#        f.write('\n')
+#
+#with open('mnist_labels.txt','w') as f:
+#    for label in list(mnist[2].labels):
+#        f.write(str(label) + ' ')
+#    f.write('\n')
+#
+#a = classifier.biases
     
     

@@ -4,6 +4,7 @@
 #define READ_STR "%f"
 
 #define RELU(x) x = x > 0 ? x : 0
+#define NEWLINE printf("\n");
 
 typedef struct
 {
