@@ -20,36 +20,10 @@ void layer_pass(matrix* layer, vector* bias, vector* input, vector* output)
     //vector_print(input);
     for (x = 0; x < layer->shape[1]; x++)// columns of layer matrix = output nodes
     {
-        for (y = 0; y < layer->shape[0]; y++)// rows of the layer matrix = input nodes
+        output->data[x] = bias->data[x];        // Add the bias first.
+        for (y = 0; y < layer->shape[0]; y++)   // Rows of the layer matrix = input nodes
         {
             output->data[x] += input->data[y] * layer->data[x][y];
-        }
-        output->data[x] += bias->data[x];
-    }
-}
-
-void layer_pass(vector * inVec, matrix * mat, vector * outVec)
-{
-    int j,k;
-    if(mat->shape[1] != inVec->len)
-    {
-        fprintf(stderr, "ERROR: Matrix and input vector's "
-                        "dimensions dont match.\n");
-    }
-    if(mat->shape[0] != outVec->len)
-    {
-        fprintf(stderr, "ERROR: Matrix and output vector's "
-                        "dimensions dont match.\n");
-    }
-    for (j = 0; j < outVec->len; j++)
-    {
-        outVec->data[j] = 0;
-    }
-    for(j = 0; j < mat->shape[0]; j++)
-    {
-        for(k = 0; k < mat->shape[1]; k++)
-        {
-            outVec->data[j] += mat->data[j][k] * inVec->data[k];
         }
     }
 }
