@@ -7,32 +7,55 @@
 
 int main()
 {
+    // Correctly labeled images
+    float acc;
     // Allocate the image and labels matrixes.
     vector *images = create_vector_list(SAMPLE_COUNT, IMAGE_SIZE);
-    vector *labels = create_vector_list(SAMPLE_COUNT, 1);
-    // Network matrix
-    network *nn = (network *) malloc(sizeof(network));
+    vector *labels = create_vector_list(1, SAMPLE_COUNT);
+    // Create the network based on the weights.
+    network *nn = create_network("network_data/weights.txt");
     // Read the labels and the samples.
     read_image("network_data/mnist_samples.txt", SAMPLE_COUNT, IMAGE_SIZE, images);
-    read_image("network_data/mnist_labels.txt", SAMPLE_COUNT, 1, labels);
-    // Create the network based on the weights.
-    create_network("network_data/weights.txt", nn);
+    read_image("network_data/mnist_labels.txt", 1, SAMPLE_COUNT, labels);
     // Evaluate the network
-    vector *output = create_vector(10);
-    layer_pass(nn->layers + 0, nn->biases + 0, images + 8, output);
     
    // matrix_print(nn->layers + 0);
    // vector_print(images + 0);
-    vector_print(output);
+    //vector_print(output);
     
-    int x = 0;
+    //printf("%d = lenght\n\n", images);
     
-    printf("%f\n", nn->layers[0].data[x++]);
-    printf("%f\n", nn->layers[0].data[x++]);
-    printf("%f\n", nn->layers[0].data[x++]);
-    printf("%f\n", nn->biases[0].data[90]);
-    printf("%f\n", nn->biases[1].data[0]);
+    //vector_print(labels);
     
-	
+    //forward_pass(nn, images);
+//    void layer_pass(matrix* layer, vector* bias, vector* input, vector* output);
+    
+    //network_print(nn);
+    
+    matrix* matt = create_matrix(2,2);
+    matt->data[0][0] = 1;
+    matt->data[0][1] = 2;
+    matt->data[1][0] = 3;
+    matt->data[1][1] = 4;
+
+    vector* vec = create_vector(2);
+    vec->data[0] = 1;
+    vec->data[1] = 1;
+    
+    vector* vecc = create_vector(2);
+    vecc->data[0] = 1;
+    vecc->data[1] = 3;
+    
+    vector *out = create_vector(2);
+    layer_pass(matt,vecc,vec,out);
+    
+    
+    
+    
+    
+    //acc = evaluate(nn, images, labels);
+    
+    printf("Accuracy of this network is: %5f\n", acc);
+    
     return 0;
 }
