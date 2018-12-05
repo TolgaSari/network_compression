@@ -49,11 +49,7 @@ int main()
     vector *out = create_vector(2);
     layer_pass(matt,vecc,vec,out);
     
-    
-    
-    
-    
-    //acc = evaluate(nn, images, labels);
+    acc = evaluate(nn, images, labels);
     
     printf("Accuracy of this network is: %5f\n", acc);
     

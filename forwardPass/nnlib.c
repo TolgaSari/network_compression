@@ -30,8 +30,6 @@ void layer_pass(matrix* layer, vector* bias, vector* input, vector* output)
     }
     //printf("%d\n",x);
     relu(output);
-    
-    vector_print(output);
 }
 
 int forward_pass(network *nn, vector* input)
@@ -39,20 +37,22 @@ int forward_pass(network *nn, vector* input)
     int x;
     int *shapes = malloc(nn->layer_count * sizeof(int));
     int prediction;
-    vector *buffers = malloc(nn->layer_count * sizeof(vector));
+    vector *buffers = malloc((nn->layer_count + 1) * sizeof(vector));
     
-
     
     for(x = 0; x < nn->layer_count; x++)
     {
-        shapes[x]   = nn->layers[x].shape[0];
-        shapes[x+1] = nn->layers[x].shape[1];
+        //shapes[2*x]   = nn->layers[x].shape[0];
+        //shapes[2x+1] = nn->layers[x].shape[1];
 //        printf("%2d. layer = (%3d, %3d)\n", x,  shapes[x],
 //                                                shapes[x+1]);
-        buffers[x+1] = *create_vector(shapes[x+1]);
+        buffers[x+1] = *create_vector(nn->layers[x].shape[1]);
     }
     
     buffers[0] = *input;
+    
+    //vector_print(input);
+    //printf("\n\n");
 //    for(x = 0; x < nn->layer_count; x++)
 //    {
 //        printf("%2d. buffer size = %d\n", x, buffers[x].len);
@@ -60,11 +60,16 @@ int forward_pass(network *nn, vector* input)
     for(x = 0; x < nn->layer_count; x++)
     {
         layer_pass(nn->layers + x, nn->biases + x, buffers + x, buffers + x + 1);
+        //vector_print(buffers + 1);
     }
-    //vector_print(buffers + 3);
+    //printf("\n");
+    vector_print(buffers + 2);
+    //vector_print(buffers + nn->layer_count);
     prediction = get_max(buffers + nn->layer_count);
     
     //printf("%d\n", prediction);
+    
+    free(buffers);
     
     return prediction;
 }
@@ -77,7 +82,7 @@ float evaluate(network *nn, vector* images, vector* labels)
     
     for(x = 0; x < labels->len; x++)
     {
-        vector_print(images + x);
+        //vector_print(images + x);
         prediction = forward_pass(nn, &images[x]);
         //printf("prediction = %d, label = %d\n", prediction, (int) labels->data[x]);
         if(prediction == (int)labels->data[x]) correct = correct + 1;
@@ -97,20 +102,20 @@ int get_max(vector *vec)
             max = x;
         }
     }
-    printf("max = %d\n",max);
+    //printf("max = %d\n",max);
     return max;
 }
 
 void vector_print(vector * vec)
 {
     int j;
-    printf("Vector:\n\n");
+    //printf("Vector:\n\n");
     printf("| ");
     for(j = 0; j < vec->len; j++)
     {
         printf(PRINT_STR, vec->data[j]);
     }
-    printf("|\n\n");
+    printf("|\n");
 }
 
 void matrix_print(matrix *mat)
