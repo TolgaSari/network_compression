@@ -9,7 +9,8 @@
 - [X] Label exporting.
 - [X] Data importing in C. (In float form)
 - [X] Layer pass. (In float form)
-- [ ] Forward pass implementation. (In float form)
+- [X] Forward pass. (In python)
+- [X] Forward pass implementation. (In float form)
 - [ ] Fixed point conversion.
 - [ ] Fixed point multiply accumulate.
 - [ ] Forward pass with fixed point.

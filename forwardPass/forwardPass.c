@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "nnlib.h"
 
-#define SAMPLE_COUNT    4
+#define SAMPLE_COUNT    10000
 #define IMAGE_SIZE      784
 
 int main()
@@ -59,7 +59,7 @@ int main()
         acc = evaluate(nn, images, labels);
     }
 
-    //printf("Accuracy of this network is: %5f\n", acc);
+    printf("Accuracy of this network is: %5f\n", acc);
     
     //vector_print(&nn->biases[2]);
     
