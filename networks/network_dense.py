@@ -7,6 +7,8 @@ from tqdm import tqdm
 from networks.network_base import BaseNetwork
 from utils import tensorflow_utils
 
+#from configs import ConfigNetworkDense as conf
+
 class FullyConnectedClassifier(BaseNetwork):
 
     def __init__(self,
@@ -313,6 +315,10 @@ class FullyConnectedClassifier(BaseNetwork):
     def export(self, filename, target):
         weight_matrices, bias_vectors = self.sess.run([self.weight_matrices,
                                                self.biases])
+#        keep = 1 - self.dropout
+#        for weight in weight_matrices:
+#            np.dot(weight, keep)
+#        np.dot(weight_matrices[-1],1/keep)
         paramCount = 0
         if(target == "verilog"):
             with open(filename, "w") as file:
@@ -351,41 +357,23 @@ class FullyConnectedClassifier(BaseNetwork):
         else:
             temp = x
         return "8'd" + str(int(temp))
-    
-    def calc_tensor(self, tensor_in, weights_in, biases_in):
-        npDot = np.dot
-        npAdd = np.add
-        array = np.zeros((tensor_in.shape[0],weights_in.shape[1]))
-        for i in range(tensor_in.shape[0]):
-            a = npDot(tensor_in[i], weights_in)
-            b = npAdd(a, biases_in)
-            array[i] = b
-        return array
-    # np.maximum(sum(np.dot(image, weight_matrices[0]),biases[0]),0)
-       # return [ npAdd(npDot(tensor_in[i,:],weights_in),biases_in)
-        #        for i in range(tensor_in.shape[0]) ] 
- #   def softmax(vector_in):
-  #      return np.exp(tensor_in) / np.sum(np.exp(tensor_in), axis=0)
-    def softmax(self,batch_in):
-        return list(map(lambda tensor_in: np.exp(tensor_in)
-                        / np.sum(np.exp(tensor_in), axis=0),
-                        batch_in))
-    
-    def ReLu(self,array_in):
-        return [list(map(lambda x: max(x,0), array_in[i]))
-                for i in range(len(array_in[:,0]))]
-    
-    def bareEval(self, data_provider, batch_size):
+ 
+    def bareEval(self, data_provider):
         
         weights, biases = self.sess.run([self.weight_matrices,
                                                self.biases])
+        #keep = 10#self.dropout
+#        for weight in weights:
+#            weight *= keep
+#        weights[-1] /= keep
+        
         n_iterations = data_provider.num_examples
         #buffer = np.array((28**2,batch_size)) # This will hold data between layers
         correct = 0
         for iteration in range(n_iterations):
             image, label = data_provider.next_batch(1)
             pred = forwardPass(image, weights, biases)
-            print('prediction =', pred, 'label=',label)
+            #print('prediction =', pred, 'label=',label)
             if label == pred:
                 correct += 1
         
@@ -408,8 +396,9 @@ def forwardPass(image, weights, biases):
     buffers=[]
     buffers.append(image)
     for i in range(len(weights)):
-        buffers.append(np.maximum(sum(np.dot(buffers[i], 
-                                   weights[i]),biases[i]),-999))
+        buffers.append(np.maximum(np.add(np.dot(buffers[i], 
+                                   weights[i]),biases[i]),0))
+    #print(buffers)
     return buffers[len(weights)].argmax()
     
     
