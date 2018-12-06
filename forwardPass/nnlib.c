@@ -17,12 +17,12 @@ void layer_pass(matrix* layer, vector* bias, vector* input, vector* output)
 {
     int x, y;
 
-//    printf("\nInput:\n"); vector_print(input); NEWLINE
-//    matrix_print(layer);
-//    vector_print(bias);
+    //printf("\nInput:\n"); vector_print(input);NEWLINE NEWLINE
+    //matrix_print(layer);
+    //vector_print(bias);
     
     //printf("Matrix = (%3d, %3d), bias = %5d, input = %5d, output = %3d\n", layer->shape[0],
-//           layer->shape[1], bias->len, input->len, output->len);
+      //     layer->shape[1], bias->len, input->len, output->len);
     
     for (x = 0; x < layer->shape[0]; x++)// columns of layer matrix = output nodes
     {
@@ -35,8 +35,8 @@ void layer_pass(matrix* layer, vector* bias, vector* input, vector* output)
         }
     }
     //printf("%d\n",x);
-//    printf("\nOutput:\n\n");vector_print(output);
-    relu(output);
+    //printf("\nOutput:\n\n");vector_print(output);
+    //relu(output);
     //vector_print(output);
 }
 
@@ -73,7 +73,7 @@ int forward_pass(network *nn, vector* input)
     //printf("\n");
 //    matrix_print(nn->layers + 2);
 //    vector_print(nn->biases + 2);
-    vector_print(buffers + 2);
+    //vector_print(buffers + 2);
 //    vector_print(buffers + nn->layer_count);
     prediction = get_max(buffers + nn->layer_count);
     
@@ -220,13 +220,17 @@ network* create_network(char* file_name)
     
     if(f == NULL)
     {
+        printf("ananan\n\n");
         perror("Failed: ");
+        free(nn);
+        nn = NULL;
     }
     else
     {
         fscanf(f, "%d", &layer_count);
         
         nn->layer_count = layer_count;
+        printf("Layer count = %d\n", layer_count);
         nn->layers = malloc(layer_count * sizeof(matrix));
         nn->biases = malloc(layer_count * sizeof(vector));
         printf("\n");
@@ -239,6 +243,7 @@ network* create_network(char* file_name)
                                                     nn->layers[x].shape[1]);
         }
         printf("\n");
+        //while(1);
         // Data is in form of:
         // layer_count, layer1_shape, layer2_shape ...
         // layer1_biases, layer1_weights, layer2_biases
@@ -260,6 +265,7 @@ network* create_network(char* file_name)
                 }
             }
         }
+        fclose(f);
     }
     return nn;
 }
