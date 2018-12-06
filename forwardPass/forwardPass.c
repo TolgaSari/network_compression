@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include "nnlib.h"
 
-#define SAMPLE_COUNT    1
-#define IMAGE_SIZE      2
+#define SAMPLE_COUNT    4
+#define IMAGE_SIZE      784
 
 int main()
 {
@@ -13,9 +13,11 @@ int main()
     vector *images = create_vector_list(SAMPLE_COUNT, IMAGE_SIZE);
     vector *labels = create_vector_list(1, SAMPLE_COUNT);
     // Create the network based on the weights.
-    network *nn = create_network("network_data/test_weights.txt");
+    network *nn = create_network("network_data/weights.txt");
+    //network *nn = create_network("network_data/test_weights.txt");
     // Read the labels and the samples.
-    read_image("network_data/test_samples.txt", SAMPLE_COUNT, IMAGE_SIZE, images);
+    //read_image("network_data/test_samples.txt", SAMPLE_COUNT, IMAGE_SIZE, images);
+    read_image("network_data/mnist_samples.txt", SAMPLE_COUNT, IMAGE_SIZE, images);
     read_image("network_data/mnist_labels.txt", 1, SAMPLE_COUNT, labels);
     // Evaluate the network
     
@@ -53,7 +55,7 @@ int main()
 //
     if(nn != NULL)
     {
-        network_print(nn);
+        //network_print(nn);
         acc = evaluate(nn, images, labels);
     }
 

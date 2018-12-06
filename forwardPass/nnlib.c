@@ -16,10 +16,10 @@ void relu(vector *vec)
 void layer_pass(matrix* layer, vector* bias, vector* input, vector* output)
 {
     int x, y;
-
-    //printf("\nInput:\n"); vector_print(input);NEWLINE NEWLINE
-    //matrix_print(layer);
-    //vector_print(bias);
+//
+//    printf("\nInput:\n"); vector_print(input);NEWLINE NEWLINE
+//    matrix_print(layer);
+//    vector_print(bias);
     
     //printf("Matrix = (%3d, %3d), bias = %5d, input = %5d, output = %3d\n", layer->shape[0],
       //     layer->shape[1], bias->len, input->len, output->len);
@@ -35,8 +35,9 @@ void layer_pass(matrix* layer, vector* bias, vector* input, vector* output)
         }
     }
     //printf("%d\n",x);
-    //printf("\nOutput:\n\n");vector_print(output);
-    //relu(output);
+//    printf("\nOutput:\n\n");vector_print(output);
+    relu(output);
+    //printf("%d\n",get_max(output));
     //vector_print(output);
 }
 
@@ -73,7 +74,8 @@ int forward_pass(network *nn, vector* input)
     //printf("\n");
 //    matrix_print(nn->layers + 2);
 //    vector_print(nn->biases + 2);
-    //vector_print(buffers + 2);
+    vector_print(buffers + 2);
+    //vector_print(buffers + 3);
 //    vector_print(buffers + nn->layer_count);
     prediction = get_max(buffers + nn->layer_count);
     
@@ -108,7 +110,7 @@ int get_max(vector *vec)
     //vector_print(vec);
     for(x = 0; x < vec->len; x++)
     {
-        if(vec->data[max] < vec->data[x])
+        if(vec->data[max] <= vec->data[x])
         {
             max = x;
         }
@@ -236,7 +238,7 @@ network* create_network(char* file_name)
         printf("\n");
         for(x = 0; x < layer_count; x++)
         {
-            fscanf(f, "%d \n %d", &col, &row);
+            fscanf(f, "%d \n %d", &row, &col);
             nn->layers[x] = *create_matrix(row, col);
             nn->biases[x] = *create_vector(row);
             printf("%2d. layer = (%3d, %3d)\n", x,  nn->layers[x].shape[0],

@@ -321,10 +321,10 @@ class FullyConnectedClassifier(BaseNetwork):
                     for j in i.shape:
                         file.write("16'd" + str(j) + '\n')
                 for weights, biases in zip(weight_matrices, bias_vectors):
-                    for i in biases.flatten():
+                    for i in biases.transpose().flatten():
                         paramCount += 1
                         file.write(self.fixPoint(i) + '\n')
-                    for i in weights.flatten():
+                    for i in weights.transpose().flatten():
                         paramCount += 1
                         file.write(self.fixPoint(i) + '\n')
         elif(target == "C" or "c"):
@@ -334,7 +334,7 @@ class FullyConnectedClassifier(BaseNetwork):
                     for j in i.shape:
                         file.write(str(j) + '\n')
                 for weights, biases in zip(weight_matrices, bias_vectors):
-                    for i in biases.flatten():
+                    for i in biases.transpose().flatten():
                         paramCount += 1
                         file.write(str(i) + '\n')
                     for i in weights.flatten():
@@ -361,6 +361,7 @@ class FullyConnectedClassifier(BaseNetwork):
             b = npAdd(a, biases_in)
             array[i] = b
         return array
+    # np.maximum(sum(np.dot(image, weight_matrices[0]),biases[0]),0)
        # return [ npAdd(npDot(tensor_in[i,:],weights_in),biases_in)
         #        for i in range(tensor_in.shape[0]) ] 
  #   def softmax(vector_in):
@@ -369,30 +370,50 @@ class FullyConnectedClassifier(BaseNetwork):
         return list(map(lambda tensor_in: np.exp(tensor_in)
                         / np.sum(np.exp(tensor_in), axis=0),
                         batch_in))
-        
+    
     def ReLu(self,array_in):
         return [list(map(lambda x: max(x,0), array_in[i]))
                 for i in range(len(array_in[:,0]))]
     
     def bareEval(self, data_provider, batch_size):
         
-        weight_matrices, bias_vectors = self.sess.run([self.weight_matrices,
+        weights, biases = self.sess.run([self.weight_matrices,
                                                self.biases])
-        n_iterations = data_provider.num_examples // batch_size
+        n_iterations = data_provider.num_examples
         #buffer = np.array((28**2,batch_size)) # This will hold data between layers
-        
+        correct = 0
         for iteration in range(n_iterations):
-            images, labels = data_provider.next_batch(batch_size)
-            temp = self.calc_tensor(images, weight_matrices[0], bias_vectors[0])
-            for weights, biases in zip(weight_matrices[1:], bias_vectors[1:]):
-                temp = self.calc_tensor(temp, weights, biases)
-                temp = self.ReLu(temp)
-            
-            list(map(lambda x: (2*x)//1, self.softmax(temp)))
+            image, label = data_provider.next_batch(1)
+            pred = forwardPass(image, weights, biases)
+            print('prediction =', pred, 'label=',label)
+            if label == pred:
+                correct += 1
+        
+        print('Accuracy =', correct/n_iterations)
+        
             #list(filter(lambda x: ))
             
             
+def softmax(x):
+    """
+    Compute softmax values for each sets of scores in x.
+    
+    Rows are scores for each class. 
+    Columns are predictions (samples).
+    """
+    scoreMatExp = np.exp(np.asarray(x))
+    return scoreMatExp / scoreMatExp.sum(0)
             
-            
-            
+def forwardPass(image, weights, biases):
+    buffers=[]
+    buffers.append(image)
+    for i in range(len(weights)):
+        buffers.append(np.maximum(sum(np.dot(buffers[i], 
+                                   weights[i]),biases[i]),-999))
+    return buffers[len(weights)].argmax()
+    
+    
+        
+    
+    
             
