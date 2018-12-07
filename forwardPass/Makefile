@@ -1,4 +1,4 @@
-CC=cc
+CC=clang
 CFLAGS=-I.
 DEPS = nnlib.h
 
