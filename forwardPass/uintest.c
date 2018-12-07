@@ -24,7 +24,6 @@ int main()
     
 }
 
-#define FixedMAC(acc, input, weight) acc =
 float fixed_multiply(int x, int y)
 {
     int input, weight;

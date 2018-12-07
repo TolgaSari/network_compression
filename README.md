@@ -12,14 +12,16 @@
 - [X] Forward pass. (In python)
 - [X] Forward pass implementation. (In float form)
 - [ ] Fixed point conversion.
-- [ ] Fixed point multiply accumulate.
+- [X] Fixed point multiply accumulate.
+- [ ] Data Exporting. (in fixed point)
 - [ ] Forward pass with fixed point.
 - [ ] Forward pass with memory access model.
 - [ ] SIMD ISA.
-- [ ] Address skipping.
+- [ ] Data exporting for verilog.
 - [ ] SIMD decoder
 - [ ] Data fetcher.
 - [ ] SIMD MAC unit.
+- [ ] Adress skipping.
 
 ## Documentation:
 - [X] Histograms, and time measurements.
