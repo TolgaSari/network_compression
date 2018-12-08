@@ -18,6 +18,7 @@
 - [ ] Forward pass with memory access model.
 - [ ] SIMD ISA.
 - [ ] Data exporting for verilog.
+- [ ] Test Bench automation.
 - [ ] SIMD decoder
 - [ ] Data fetcher.
 - [ ] SIMD MAC unit.
