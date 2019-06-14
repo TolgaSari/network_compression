@@ -17,28 +17,16 @@ void layer_pass(matrix* layer, vector* bias, vector* input, vector* output)
 {
     int row, col;
 
-//    printf("\nInput:\n"); vector_print(input);NEWLINE NEWLINE
-//    matrix_print(layer);
-//    vector_print(bias);
-//
-    //printf("Matrix = (%3d, %3d), bias = %5d, input = %5d, output = %3d\n", layer->shape[0],
-      //     layer->shape[1], bias->len, input->len, output->len);
-    
     for (col = 0; col < layer->shape[1]; col++)// columns of layer matrix = output nodes
     {
         output->data[col] = bias->data[col];// Add the bias first.
         
         for (row = 0; row < layer->shape[0]; row++)   // Rows of the layer matrix = input nodes
         {
-            //printf("%d=%d\n",x,y);
             output->data[col] += input->data[row] * layer->data[row][col];
         }
     }
-    //printf("%d\n",x);
-//    printf("\nOutput:\n\n");vector_print(output);
     relu(output);
-    //printf("%d\n",get_max(output));
-    //vector_print(output);
 }
 
 int forward_pass(network *nn, vector* input)
@@ -51,35 +39,16 @@ int forward_pass(network *nn, vector* input)
     
     for(x = 0; x < nn->layer_count; x++)
     {
-        //shapes[2*x]   = nn->layers[x].shape[0];
-        //shapes[2x+1] = nn->layers[x].shape[1];
-//        printf("%2d. layer = (%3d, %3d)\n", x,  nn->layers[x].shape[0],
-//                                                nn->layers[x].shape[1]);
         buffers[x+1] = *create_vector(nn->layers[x].shape[1]);
     }
     
     buffers[0] = *input;
     
-    //vector_print(input);
-    //printf("\n\n");
-//    for(x = 0; x < nn->layer_count+1; x++)
-//    {
-//        printf("%2d. buffer size = %d\n", x, buffers[x].len);
-//    }
     for(x = 0; x < nn->layer_count; x++)
     {
         layer_pass(nn->layers + x, nn->biases + x, buffers + x, buffers + x + 1);
-        //vector_print(buffers + 1);
     }
-    //printf("\n");
-//    matrix_print(nn->layers + 2);
-//    vector_print(nn->biases + 2);
-    //vector_print(buffers + 2);
-    //vector_print(buffers + 3);
-//    vector_print(buffers + nn->layer_count);
     prediction = get_max(buffers + nn->layer_count);
-    
-    //printf("%d\n", prediction);
     
     free(buffers);
     
@@ -94,12 +63,9 @@ float evaluate(network *nn, vector* images, vector* labels)
     
     for(x = 0; x < labels->len; x++)
     {
-        //vector_print(images + x);
         prediction = forward_pass(nn, &images[x]);
-        //printf("prediction = %d, label = %d\n", prediction, (int) labels->data[x]);
         if(prediction == (int)labels->data[x]) correct = correct + 1;
     }
-    //printf("correct = %3d\n", correct);
     return (float) correct / (float) labels->len;
 }
 
@@ -107,7 +73,6 @@ int get_max(vector *vec)
 {
     int x;
     int max = 0;
-    //vector_print(vec);
     for(x = 0; x < vec->len; x++)
     {
         if(vec->data[max] <= vec->data[x])
@@ -115,14 +80,12 @@ int get_max(vector *vec)
             max = x;
         }
     }
-    //printf("max = %d\n",max);
     return max;
 }
 
 void vector_print(vector * vec)
 {
     int j;
-    //printf("Vector:\n\n");
     printf("| ");
     for(j = 0; j < vec->len; j++)
     {
@@ -199,7 +162,6 @@ void read_image(char* file_name, int sample_size, int image_size, vector* images
         {
             for (x = 0; x < image_size; x++)
             {
-                //printf("%d",x);
                 fscanf(f, "%f", &pixel); // For float
                 images[y].data[x] = pixel;
             }
@@ -244,7 +206,6 @@ network* create_network(char* file_name)
                                                     nn->layers[x].shape[1]);
         }
         printf("\n");
-        //while(1);
         // Data is in form of:
         // layer_count, layer1_shape, layer2_shape ...
         // layer1_biases, layer1_weights, layer2_biases
