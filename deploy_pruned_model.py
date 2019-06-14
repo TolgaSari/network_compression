@@ -79,7 +79,7 @@ compRatio = (classifier.params-sparse_classifier.params)/classifier.params*100
 print('Compression ratio = ', compRatio, '%')
 
 plot_utils.plot_histogram(layers,
-                          'weights_distribution_before_pruning',
+                          'weights_distribution_after_quantization',
                           include_zeros=False)
 
 # finally, save a sparse model
