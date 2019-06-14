@@ -13,7 +13,7 @@
 - [X] Forward pass implementation. (In float form)
 - [ ] Fixed point conversion.
 - [X] Fixed point multiply accumulate.
-- [ ] Data Exporting. (in fixed point)
+- [ ] Data Exporting. (in fixed point) (you quantize sparse model but export dense)
 - [ ] Forward pass with fixed point.
 - [ ] Forward pass with memory access model.
 - [ ] SIMD ISA.
