@@ -15,13 +15,6 @@
 - [X] Fixed point multiply accumulate.
 - [ ] Data Exporting. (in fixed point) (you quantize sparse model but export dense)
 - [ ] Forward pass with fixed point.
-- [ ] Forward pass with memory access model.
-- [ ] SIMD ISA.
-- [ ] Data exporting for verilog.
-- [ ] Test Bench automation.
-- [ ] SIMD decoder
-- [ ] Data fetcher.
-- [ ] SIMD MAC unit.
 - [ ] Adress skipping.
 
 ## Documentation:
