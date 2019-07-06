@@ -13,7 +13,7 @@ def plot_histogram(weights_list: list,
     if not include_zeros:
         weights = [w for w in weights if w != 0]
 
-    fig = plt.figure(figsize=(10, 7))
+    fig = plt.figure(figsize=(12, 8))
     ax = fig.add_subplot(111)
 
     ax.hist(weights,
@@ -21,7 +21,7 @@ def plot_histogram(weights_list: list,
             facecolor='green',
             edgecolor='black',
             alpha=0.7,
-            range=(-1, 1))
+            range=(-0.2, 0.2))
 
     ax.set_title('Weights distribution')
     ax.set_xlabel('Weights values')
