@@ -40,7 +40,7 @@ weight_matrices, biases = classifier.sess.run([classifier.weight_matrices,
 sparse_layers = []
 layers = []
 
-fixLoc = 6
+fixLoc = 5
 
 # turn dense pruned weights into sparse indices and values
 for weights, bias in zip(weight_matrices, biases):
@@ -70,13 +70,14 @@ sparse_classifier = network_sparse.FullyConnectedClassifierSparse(
 runtime = time.time()
 accuracy, loss = sparse_classifier.evaluate(data_provider=test_data_provider,
                                             batch_size=config_sparse.batch_size)
-runtime = time.time()-runtime
+runtime = time.time() - runtime
 print('Sparse network took', runtime,' seconds to evaluate.')
 print('Accuracy on test with sparse model: {accuracy}, loss on test: {loss}'.format(
                                                    accuracy=accuracy, loss=loss))
 
 compRatio = (classifier.params-sparse_classifier.params)/classifier.params*100
-print('Compression ratio = ', compRatio, '%')
+print('Compression ratio = ', 100/(100 - compRatio))
+print('Compression ratio including quantization = ', 100/(100 - compRatio)*32/(fixLoc+1))
 
 plot_utils.plot_histogram(layers,
                           'weights_distribution_after_quantization',
