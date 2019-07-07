@@ -15,7 +15,7 @@
 - [X] Fixed point multiply accumulate.
 - [ ] Data Exporting. (in fixed point) (you quantize sparse model but export dense)
 - [ ] Forward pass with fixed point.
-- [ ] Adress skipping.
+- [ ] Adress skipping(run length encoding).
 
 ## Documentation:
 - [X] Histograms, and time measurements.
