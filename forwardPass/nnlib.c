@@ -19,11 +19,19 @@ void layer_pass(matrix* layer, vector* bias, vector* input, vector* output, floa
 
     for (col = 0; col < layer->shape[1]; col++)// columns of layer matrix = output nodes
     {
-        output->data[col] = qtable[bias->data[col]];// Add the bias first.
-        
+        #ifdef QUANTIZED
+            output->data[col] = qtable[bias->data[col]];// Add the bias first.
+        #else
+            output->data[col] = bias->data[col];// Add the bias first.
+        #endif 
+
         for (row = 0; row < layer->shape[0]; row++)   // Rows of the layer matrix = input nodes
         {
-            output->data[col] += input->data[row] * qtable[layer->data[row][col]];
+            #ifdef QUANTIZED
+                output->data[col] += input->data[row] * qtable[layer->data[row][col]];
+            #else
+                output->data[col] += input->data[row] * layer->data[row][col];
+            #endif 
         }
     }
     relu(output);
@@ -183,9 +191,9 @@ network* create_network(char* file_name)
     DATA_TYPE read_data;
 
     //weight count
-    int wcount = 64;
+    int wcount = 16;
     // intervals between the weights will be distributed.
-    float interval = 0.5;
+    float interval = 0.25;
     
     if(f == NULL)
     {
@@ -235,18 +243,18 @@ network* create_network(char* file_name)
     }
 
 
-    nn->qtable = malloc(wcount * sizeof(float));
+    nn->qtable = malloc((wcount - 1) * sizeof(float));
     
     nn->qtable += wcount/2;
     
-    for(x = -wcount/2; x < wcount/2; x++)
+    for(x = -wcount/2 + 1; x < wcount/2; x++)
     {
         nn->qtable[x] = ((float) x) * interval / wcount * 2;
     }
 
-    for(x = -wcount/2; x < wcount/2; x++)
+    for(x = -wcount/2 + 1; x < wcount/2; x++)
     {
-        //printf("%d = %f\n", x, nn->qtable[x]);
+        printf("%2d = %f\n", x, nn->qtable[x]);
     }
 
     return nn;
@@ -264,6 +272,8 @@ void compress_zeros(char* file_name)
     network* nn = malloc(sizeof(network));
     matrix* new_layer;
     int read_data;
+    int read_bytes;
+    int total_skips;
 
     if(weight_file == NULL)
     {
@@ -302,7 +312,9 @@ void compress_zeros(char* file_name)
         {
             for(col = 0; col < nn->layers[x].shape[1]; col++)
             {
-                fscanf(weight_file, "%d", &read_data);
+                read_bytes = fscanf(weight_file, "%d", &read_data);
+                if(read_bytes == EOF)
+                    break;
                 nn->biases[x].data[col] = read_data;
                 fprintf(comp_file, "%d\n", read_data);
             }
@@ -311,8 +323,10 @@ void compress_zeros(char* file_name)
             {
                 for (col = 0; col < nn->layers[x].shape[1]; col++)
                 {
-                    fscanf(weight_file, "%d\n", &read_data );
-
+                    read_bytes = fscanf(weight_file, "%d", &read_data);
+                    if(read_bytes == EOF)
+                        break;
+                    
                     if(read_data != 0)
                     {
                         nn->layers[x].data[row][col] = read_data;
@@ -323,17 +337,21 @@ void compress_zeros(char* file_name)
                         while(1)
                         {
                             zero_count++;
-                            fscanf(weight_file, "%d", &read_data);
-                            if((zero_count + col == nn->layers[x].shape[1]))
-                            {
-                                skip_count[zero_count]++;
-                                col += zero_count;
+                            read_bytes = fscanf(weight_file, "%d", &read_data);
+                            if(read_bytes == EOF)
                                 break;
-                            }  
-                            else if(read_data != 0)
+                            //if((zero_count + col == nn->layers[x].shape[1]))
+                            //{
+                                //skip_count[zero_count]++;
+                                //col += zero_count;
+                                //break;
+                            //}  
+                            //else if(read_data != 0)
+                            if(read_data != 0)
                             {
-                                col += zero_count;
-                                fprintf(comp_file,"%d\n",read_data);
+                                total_skips += zero_count;
+                                skip_count[zero_count >= 1024 ? 1023 : zero_count]++;
+                                col += zero_count + 1;
                                 break;
                             }
                         }
@@ -344,23 +362,25 @@ void compress_zeros(char* file_name)
                         }
                         else
                         {
-                            fprintf(comp_file,"%d\n", 0x10);
+                            fprintf(comp_file,"%d\n", -9);
                         } 
 
+                        fprintf(comp_file,"%d\n",read_data);
                         zero_count = 0;
                     }
                 }
             }
         }
-        for(x = 0; x < 1024; x++)
+
+        fprintf(skip_histogram, "total skips = %5d\n", total_skips);
+        for(x = 1; x < 1024; x++)
         {
-            fprintf(skip_histogram, "%d\n", skip_count[x]);
+            fprintf(skip_histogram, "%5d skips = %5d\n", x, skip_count[x]);
         }
-       printf("what"); 
+
         fclose(weight_file);
         fclose(skip_histogram);
         fclose(comp_file);
-       printf("what"); 
     }
 }
 
