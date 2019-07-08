@@ -2,7 +2,8 @@ import numpy as np
 import tensorflow as tf
 
 from tensorflow.examples.tutorials.mnist import input_data
-mnist = input_data.read_data_sets("MNIST_data/")
+#mnist = input_data.read_data_sets("MNIST_data/")
+mnist = input_data.read_data_sets("FASHION_MNIST_data/")
 
 train_data_provider = mnist.train
 validation_data_provider = mnist.validation

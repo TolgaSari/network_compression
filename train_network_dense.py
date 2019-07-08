@@ -1,10 +1,11 @@
 import tensorflow as tf
-tf.set_random_seed(123)
+tf.set_random_seed(3141)
 import numpy as np
-np.random.seed(123)
+np.random.seed(3141)
 
 from tensorflow.examples.tutorials.mnist import input_data
-mnist = input_data.read_data_sets("MNIST_data/")
+#mnist = input_data.read_data_sets("MNIST_data/")
+mnist = input_data.read_data_sets("FASHION_MNIST_data/")
 
 train_data_provider = mnist.train
 validation_data_provider = mnist.validation
