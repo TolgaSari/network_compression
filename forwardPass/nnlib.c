@@ -13,17 +13,17 @@ void relu(vector *vec)
     }
 }
 
-void layer_pass(matrix* layer, vector* bias, vector* input, vector* output)
+void layer_pass(matrix* layer, vector* bias, vector* input, vector* output, float *qtable)
 {
     int row, col;
 
     for (col = 0; col < layer->shape[1]; col++)// columns of layer matrix = output nodes
     {
-        output->data[col] = bias->data[col];// Add the bias first.
+        output->data[col] = qtable[bias->data[col]];// Add the bias first.
         
         for (row = 0; row < layer->shape[0]; row++)   // Rows of the layer matrix = input nodes
         {
-            output->data[col] += input->data[row] * layer->data[row][col];
+            output->data[col] += input->data[row] * qtable[layer->data[row][col]];
         }
     }
     relu(output);
@@ -46,7 +46,7 @@ int forward_pass(network *nn, vector* input)
     
     for(x = 0; x < nn->layer_count; x++)
     {
-        layer_pass(nn->layers + x, nn->biases + x, buffers + x, buffers + x + 1);
+        layer_pass(nn->layers + x, nn->biases + x, buffers + x, buffers + x + 1, nn->qtable);
     }
     prediction = get_max(buffers + nn->layer_count);
     
@@ -154,7 +154,7 @@ void read_image(char* file_name, int sample_size, int image_size, vector* images
     float pixel;
     if (f == NULL)
     {
-        perror("Failed: ");
+        perror("read image Failed: ");
     }
     else
     {
@@ -181,6 +181,11 @@ network* create_network(char* file_name)
     FILE *f = fopen(file_name, "r");
     
     DATA_TYPE read_data;
+
+    //weight count
+    int wcount = 64;
+    // intervals between the weights will be distributed.
+    float interval = 0.5;
     
     if(f == NULL)
     {
@@ -228,7 +233,135 @@ network* create_network(char* file_name)
         }
         fclose(f);
     }
+
+
+    nn->qtable = malloc(wcount * sizeof(float));
+    
+    nn->qtable += wcount/2;
+    
+    for(x = -wcount/2; x < wcount/2; x++)
+    {
+        nn->qtable[x] = ((float) x) * interval / wcount * 2;
+    }
+
+    for(x = -wcount/2; x < wcount/2; x++)
+    {
+        //printf("%d = %f\n", x, nn->qtable[x]);
+    }
+
     return nn;
+}
+
+void compress_zeros(char* file_name)
+{
+    char *comp_file_name = "comp_weights.txt"; 
+
+    FILE *weight_file = fopen(file_name, "r");
+    FILE *comp_file = fopen(comp_file_name, "w");
+    FILE *skip_histogram = fopen("skip_histogram.txt", "w");
+    int x, row, col, layer_count, zero_count;
+    int skip_count[1024] = {0};
+    network* nn = malloc(sizeof(network));
+    matrix* new_layer;
+    int read_data;
+
+    if(weight_file == NULL)
+    {
+        perror("compress_zeros weight file:");
+    }
+    else if(comp_file == NULL)
+    {
+        perror("compress_zeros comp file:");
+    }
+    else if(skip_histogram == NULL)
+    {
+        perror("compress_zeros skip_histogram file:");
+    }
+    else
+    {
+        fscanf(weight_file, "%d", &layer_count);
+        
+        nn->layer_count = layer_count;
+        printf("Layer count = %d\n", layer_count);
+        nn->layers = malloc(layer_count * sizeof(matrix));
+        nn->biases = malloc(layer_count * sizeof(vector));
+        printf("\n");
+        for(x = 0; x < layer_count; x++)
+        {
+            fscanf(weight_file, "%d \n %d", &row, &col);
+            nn->layers[x] = *create_matrix(row, col);
+            nn->biases[x] = *create_vector(col);
+            printf("%2d. layer = (%3d, %3d)\n", x,  nn->layers[x].shape[0],
+                                                    nn->layers[x].shape[1]);
+        }
+        printf("\n");
+        // Data is in form of:
+        // layer_count, layer1_shape, layer2_shape ...
+        // layer1_biases, layer1_weights, layer2_biases
+        for(x = 0; x < layer_count; x++)
+        {
+            for(col = 0; col < nn->layers[x].shape[1]; col++)
+            {
+                fscanf(weight_file, "%d", &read_data);
+                nn->biases[x].data[col] = read_data;
+                fprintf(comp_file, "%d\n", read_data);
+            }
+            
+            for(row = 0; row < nn->layers[x].shape[0]; row++)
+            {
+                for (col = 0; col < nn->layers[x].shape[1]; col++)
+                {
+                    fscanf(weight_file, "%d\n", &read_data );
+
+                    if(read_data != 0)
+                    {
+                        nn->layers[x].data[row][col] = read_data;
+                        fprintf(comp_file, "%d\n", read_data);
+                    }
+                    else
+                    {
+                        while(1)
+                        {
+                            zero_count++;
+                            fscanf(weight_file, "%d", &read_data);
+                            if((zero_count + col == nn->layers[x].shape[1]))
+                            {
+                                skip_count[zero_count]++;
+                                col += zero_count;
+                                break;
+                            }  
+                            else if(read_data != 0)
+                            {
+                                col += zero_count;
+                                fprintf(comp_file,"%d\n",read_data);
+                                break;
+                            }
+                        }
+                        if(zero_count > 1)
+                        {
+                            fprintf(comp_file,"%d\n",0);
+                            fprintf(comp_file,"%d\n",zero_count);
+                        }
+                        else
+                        {
+                            fprintf(comp_file,"%d\n", 0x10);
+                        } 
+
+                        zero_count = 0;
+                    }
+                }
+            }
+        }
+        for(x = 0; x < 1024; x++)
+        {
+            fprintf(skip_histogram, "%d\n", skip_count[x]);
+        }
+       printf("what"); 
+        fclose(weight_file);
+        fclose(skip_histogram);
+        fclose(comp_file);
+       printf("what"); 
+    }
 }
 
 void network_print(network * nn)
