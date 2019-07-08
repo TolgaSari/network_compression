@@ -11,10 +11,9 @@
 - [X] Layer pass. (In float form)
 - [X] Forward pass. (In python)
 - [X] Forward pass implementation. (In float form)
-- [ ] Fixed point conversion.
-- [X] Fixed point multiply accumulate.
-- [ ] Data Exporting. (in fixed point) (you quantize sparse model but export dense)
-- [ ] Forward pass with fixed point.
+- [ ] Data Exporting. (quantized) (you quantize sparse model but export dense)
+- [ ] Quantized forward pass.
+- [ ] Forward pass with qtables.
 - [ ] Adress skipping(run length encoding).
 
 ## Documentation:
@@ -22,6 +21,4 @@
 - [X] Histograms for quantization.
 - [ ] Pruning Methods.
 - [ ] Quantization methods.
-- [ ] Fixed point arithmetic.
-- [ ] SIMD ISA and specifications.
 - [ ] Sample thesis start.
