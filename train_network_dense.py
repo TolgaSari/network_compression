@@ -3,9 +3,13 @@ tf.set_random_seed(3141)
 import numpy as np
 np.random.seed(3141)
 
+from utils import plot_utils
+from utils import pruning_utils
+
 from tensorflow.examples.tutorials.mnist import input_data
-#mnist = input_data.read_data_sets("MNIST_data/")
-mnist = input_data.read_data_sets("FASHION_MNIST_data/")
+mnist = input_data.read_data_sets("MNIST_data/")
+#mnist = input_data.read_data_sets("FASHION_MNIST_data/")
+pruning_utils.cifar10toMnist(mnist)
 
 train_data_provider = mnist.train
 validation_data_provider = mnist.validation

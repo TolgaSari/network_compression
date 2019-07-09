@@ -1,19 +1,22 @@
 import numpy as np
 import tensorflow as tf
 
-from tensorflow.examples.tutorials.mnist import input_data
-#mnist = input_data.read_data_sets("MNIST_data/")
-mnist = input_data.read_data_sets("FASHION_MNIST_data/")
-
-train_data_provider = mnist.train
-validation_data_provider = mnist.validation
-test_data_provider = mnist.test
-
 from networks import network_dense
 from configs import ConfigNetworkDense as config_dense
 from configs import ConfigNetworkDensePruned as config_pruned
 from utils import plot_utils
 from utils import pruning_utils
+
+from tensorflow.examples.tutorials.mnist import input_data
+
+mnist = input_data.read_data_sets("MNIST_data/")
+#mnist = input_data.read_data_sets("FASHION_MNIST_data/")
+pruning_utils.cifar10toMnist(mnist)
+
+train_data_provider = mnist.train
+validation_data_provider = mnist.validation
+test_data_provider = mnist.test
+
 
 # at first, create classifier
 classifier = network_dense.FullyConnectedClassifier(

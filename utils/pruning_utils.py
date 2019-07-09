@@ -43,14 +43,79 @@ class SparseLayer(collections.namedtuple('SparseLayer',
     """An auxilary class to represent sparse layer"""
     pass
 
-def quantify(values,fixLoc):
+def quantify(values,fixLoc,interval=0.25):
     # A naive linear quantizier
+    
     halfFix = fixLoc
-    neg_bins = np.array([-x/(2**halfFix) for x in reversed(range(2**halfFix))])[:-1]
-    pos_bins = np.array([x/(2**halfFix) for x in range(2**halfFix)])
+    neg_bins = np.array([-x/(2**halfFix)*interval for x in reversed(range(2**halfFix))])[:-1]
+    pos_bins = np.array([x/(2**halfFix)*interval for x in range(2**halfFix)])
     bins = np.concatenate((neg_bins, pos_bins))
     centers = (bins[1:]+bins[:-1])/2
-
-    res = bins[np.digitize(values, centers)]
-    return res.astype(np.float32)
     
+    quantified = np.digitize(values, centers)
+    
+    res = bins[quantified]
+    return res.astype(np.float32), (quantified - 2**(fixLoc) + 1)
+
+def export_quantized(filename, fixLoc, interval, weight_matrices, bias_vectors):
+
+        paramCount = 0
+        neg_bins = np.array([-x/(2**fixLoc)*interval for x in reversed(range(2**fixLoc))])[:-1]
+        pos_bins = np.array([x/(2**fixLoc)*interval for x in range(2**fixLoc)])
+        bins = np.concatenate((neg_bins, pos_bins))
+        print(bins)
+        
+        with open(filename, "w") as file:
+            #file.write(str(fixLoc) + '\n')            
+            file.write(str(len(weight_matrices)) + '\n')
+            for i in weight_matrices:
+                for j in i.shape:
+                    file.write(str(j) + '\n')
+            for weights, biases in zip(weight_matrices, bias_vectors):
+                for i in biases.transpose().flatten():
+                    paramCount += 1
+                    file.write(str(i) + '\n')
+                for i in weights.flatten():
+                    paramCount += 1
+                    file.write(str(i) + '\n')
+        
+        with open("aprox_" + filename, "w") as file:
+            #file.write(str(fixLoc) + '\n')            
+            file.write(str(len(weight_matrices)) + '\n')
+            for i in weight_matrices:
+                for j in i.shape:
+                    file.write(str(j) + '\n')
+            for weights, biases in zip(weight_matrices, bias_vectors):
+                for i in biases.transpose().flatten():
+                    paramCount += 1
+                    file.write(str(i*2**(-fixLoc)*0.25) + '\n')
+                for i in weights.flatten():
+                    paramCount += 1
+                    file.write(str(i*2**(-fixLoc)*0.25) + '\n')
+                    
+def cifar10toMnist(mnist):
+    from keras.datasets import cifar10
+    
+    (x_train, y_train), (x_test, y_test) = cifar10.load_data()
+    
+    temp = imageReshape(x_train)
+    
+    mnist.train._images = temp[0:40000]
+    mnist.train._labels = y_train[0:40000].flatten()
+    mnist.train._num_examples = 40000
+    
+    mnist.validation._images = temp[40000:]
+    mnist.validation._labels = y_train[40000:].flatten()
+    mnist.validation._num_examples = 10000
+    
+    mnist.test._images = imageReshape(x_test)
+    mnist.test._labels = y_test.flatten()
+    mnist.test._num_examples = 10000
+    
+    return mnist
+    
+def imageReshape(imageList,):
+    temp = imageList.reshape(imageList.shape[0],1024,3)
+    temp = temp.reshape(imageList.shape[0],3072).astype(np.float32)/256
+    
+    return temp

@@ -2,17 +2,17 @@ import tensorflow as tf
 
 class ConfigNetworkDense:
 
-    input_size = 28 * 28
+    input_size = 32 * 32 * 3 #28 * 28
     n_classes = 10
     layer_sizes = [30, 30]
     dropout = 0.5
     weight_decay = 0.0005
     activation_fn = tf.nn.relu
     model_path = 'saved_models/network_dense'
+    
 
     n_epochs = 25
-    batch_size = 100
-
+    batch_size = 64
     @staticmethod
     def learning_rate_schedule(epoch):
 
@@ -25,17 +25,19 @@ class ConfigNetworkDense:
 
 class ConfigNetworkDensePruned:
 
-    input_size = 28 * 28
+    input_size = 32 * 32 * 3 #28 * 28
     n_classes = 10
     layer_sizes = [30, 30] # 512,512
     dropout = 0
     weight_decay = 0.0001
     activation_fn = tf.nn.relu
     model_path = 'saved_models/network_dense_pruned'
+    q_model_path = 'saved_models/network_dense_quantized'
+    
     pruning_threshold = 0.03
 
     n_epochs = 20
-    batch_size = 100
+    batch_size = 128
 
     @staticmethod
     def learning_rate_schedule(epoch):
@@ -47,9 +49,9 @@ class ConfigNetworkDensePruned:
 
 class ConfigNetworkSparse:
 
-    input_size = 28 * 28
+    input_size = 32 * 32 * 3 #28 * 28
     n_classes = 10
     activation_fn = tf.nn.relu
     model_path = 'saved_models/network_sparse'
     
-    batch_size = 100
+    batch_size = 1
