@@ -11,7 +11,14 @@
 - [X] Layer pass. (In float form)
 - [X] Forward pass. (In python)
 - [X] Forward pass implementation. (In float form)
-- [ ] Data Exporting. (quantized) (you quantize sparse model but export dense)
+- [X] Data Exporting. (quantized) (you quantize sparse model but export dense)
+- [X] Run Lenght Encodeing.
+- [X] Input FIFO.
+- [X] Single Port Ram.
+- [ ] Memory Switch.
+- [ ] Multiplication stage.
+- [ ] Accumulation stage.
+- [ ] Test bench that reads txt.
 - [ ] Quantized forward pass.
 - [ ] Forward pass with qtables.
 - [ ] Adress skipping(run length encoding).
@@ -19,6 +26,6 @@
 ## Documentation:
 - [X] Histograms, and time measurements.
 - [X] Histograms for quantization.
-- [ ] Pruning Methods.
-- [ ] Quantization methods.
-- [ ] Sample thesis start.
+- [X] Pruning Methods.
+- [X] Quantization methods.
+- [X] Sample thesis start.
