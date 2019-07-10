@@ -12,10 +12,11 @@
 - [X] Forward pass. (In python)
 - [X] Forward pass implementation. (In float form)
 - [X] Data Exporting. (quantized) (you quantize sparse model but export dense)
+- [ ] Data Exporting in fixed point for verilog.
 - [X] Run Lenght Encodeing.
 - [X] Input FIFO.
 - [X] Single Port Ram.
-- [ ] Memory Switch.
+- [X] Memory Switch.
 - [ ] Multiplication stage.
 - [ ] Accumulation stage.
 - [ ] Test bench that reads txt.
