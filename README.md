@@ -12,17 +12,19 @@
 - [X] Forward pass. (In python)
 - [X] Forward pass implementation. (In float form)
 - [X] Data Exporting. (quantized) (you quantize sparse model but export dense)
-- [ ] Data Exporting in fixed point for verilog.
 - [X] Run Lenght Encodeing.
 - [X] Input FIFO.
 - [X] Single Port Ram.
 - [X] Memory Switch.
-- [ ] Multiplication stage.
-- [ ] Accumulation stage.
+- [X] Multiplicator.
+- [ ] Adder.
 - [ ] Test bench that reads txt.
-- [ ] Quantized forward pass.
-- [ ] Forward pass with qtables.
-- [ ] Adress skipping(run length encoding).
+- [ ] Connect input_fifo, input memory and multiplier (multiplication stage)
+- [ ] Connect output of multiplier to adder and output memory (accumulation stage)
+- [ ] Data Exporting in fixed point for verilog.
+- [ ] Controller.
+- [ ] Accumulation stage.
+
 
 ## Documentation:
 - [X] Histograms, and time measurements.
@@ -30,3 +32,10 @@
 - [X] Pruning Methods.
 - [X] Quantization methods.
 - [X] Sample thesis start.
+- [ ] Explain Fixed point.
+- [ ] Explain run lenght encoding.
+- [ ] Do tests for 3 datasets for 3 networks (train, prune, quantize, encode).
+- [ ] Draw nnEngine Architecture.
+- [ ] Explain modules.
+- [ ] Explain architecture.
+- [ ] Do some estimations about speed up and energy efficiency.
