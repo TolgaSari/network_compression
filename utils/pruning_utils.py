@@ -119,3 +119,23 @@ def imageReshape(imageList,):
     temp = temp.reshape(imageList.shape[0],3072).astype(np.float32)/256
     
     return temp
+
+def export_sparse_packets(sparse_layers):
+    for i in range(len(sparse_layers)):
+        with open("sparse_network/sparse_layer_" + str(i), "w") as f:
+            for j in range(len(sparse_layers[i][0])):
+                value = sparse_layers[i][0][j]
+                row = sparse_layers[i][1][j][0]
+                col = sparse_layers[i][1][j][1]
+                value = (value & 255) << 24
+                row = row << 12
+                packet = value | row | col
+                f.write(str(packet) + "\n") # use hex(packet) to check
+                
+        with open("sparse_network/sparse_bias_" + str(i), "w") as f:
+            for j in range(len(sparse_layers[i][3])):
+                f.write(str(sparse_layers[i][3][j]) + "\n")  
+                
+        with open("sparse_network/sparse_shape_" + str(i), "w") as f:
+            for j in range(len(sparse_layers[i][2])):
+                f.write(str(sparse_layers[i][2][j]) + "\n")  
