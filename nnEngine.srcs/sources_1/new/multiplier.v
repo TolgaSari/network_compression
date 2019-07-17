@@ -20,7 +20,9 @@
 //////////////////////////////////////////////////////////////////////////////////
 // 00.100000 = 0.5       => 0000.100000_000000
 // 11.100000 = - 0.5     => 1111.100000_111111 => 0000.011111_000001
-
+// GREEDY
+// 11111 = 1111.111111_000000
+// 01111 = 0000.001111_000000
 `define GREEDY_QUANTIZATION
 
 module multiplier
@@ -41,7 +43,7 @@ module multiplier
     wire signed [2*DATA_WIDTH_IN_2-1:0] temp;
     
     `ifdef GREEDY_QUANTIZATION
-    assign extended_num1 = ({{5{num1[6]}}, num1[6:0], {4{1'b0}}});
+    assign extended_num1 = ({{5{num1[4]}}, num1[4:0], {6{1'b0}}});
     `else
     assign extended_num1 = {{3{num1[6]}}, num1[6:0], {6{1'b0}}};
     `endif
