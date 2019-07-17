@@ -20,9 +20,9 @@
 - [ ] Proper greedy quantization for fixed point.
 - [ ] Adder.
 - [ ] Test bench that reads txt.
-- [ ] Connect input_fifo, input memory and multiplier (multiplication stage)
+- [ ] Connect inputfifo, input memory and multiplier (multiplication stage)
 - [ ] Connect output of multiplier to adder and output memory (accumulation stage)
-- [ ] Data Exporting in fixed point for verilog.
+- [x] Data Exporting in fixed point for verilog.
 - [ ] Controller.
 - [ ] Switch memories.
 - [ ] Read inputs to first memory.
