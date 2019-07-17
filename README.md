@@ -17,6 +17,7 @@
 - [X] Single Port Ram.
 - [X] Memory Switch.
 - [X] Multiplicator.
+- [ ] Proper greedy quantization for fixed point.
 - [ ] Adder.
 - [ ] Test bench that reads txt.
 - [ ] Connect input_fifo, input memory and multiplier (multiplication stage)
@@ -35,8 +36,8 @@
 - [X] Pruning Methods.
 - [X] Quantization methods.
 - [X] Sample thesis start.
-- [ ] Explain Fixed point.
-- [ ] Explain run lenght encoding.
+- [X] Explain Fixed point.
+- [X] Explain run lenght encoding.
 - [ ] Do tests for 3 datasets for 3 networks (train, prune, quantize, encode).
 - [ ] Draw nnEngine Architecture.
 - [ ] Explain modules.
