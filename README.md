@@ -23,6 +23,9 @@
 - [ ] Connect output of multiplier to adder and output memory (accumulation stage)
 - [ ] Data Exporting in fixed point for verilog.
 - [ ] Controller.
+- [ ] Switch memories.
+- [ ] Read inputs to first memory.
+- [ ] Read Bias to second memory.
 - [ ] Accumulation stage.
 
 
