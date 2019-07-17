@@ -2,9 +2,10 @@ import tensorflow as tf
 
 class ConfigNetworkDense:
 
-    input_size = 32 * 32 * 3 #28 * 28
+    #input_size = 32 * 32 * 3
+    input_size = 28 * 28
     n_classes = 10
-    layer_sizes = [30, 30]
+    layer_sizes = [32, 32]
     dropout = 0.5
     weight_decay = 0.0005
     activation_fn = tf.nn.relu
@@ -25,9 +26,10 @@ class ConfigNetworkDense:
 
 class ConfigNetworkDensePruned:
 
-    input_size = 32 * 32 * 3 #28 * 28
+    #input_size = 32 * 32 * 3
+    input_size = 28 * 28
     n_classes = 10
-    layer_sizes = [30, 30] # 512,512
+    layer_sizes = [32, 32] # 512,512
     dropout = 0
     weight_decay = 0.0001
     activation_fn = tf.nn.relu
@@ -48,8 +50,9 @@ class ConfigNetworkDensePruned:
             return 1e-4
 
 class ConfigNetworkSparse:
-
-    input_size = 32 * 32 * 3 #28 * 28
+    
+    #input_size = 32 * 32 * 3
+    input_size = 28 * 28
     n_classes = 10
     activation_fn = tf.nn.relu
     model_path = 'saved_models/network_sparse'
