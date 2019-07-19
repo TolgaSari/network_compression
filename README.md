@@ -19,10 +19,12 @@
 - [X] Multiplicator.
 - [X] Proper greedy quantization for fixed point. 
 - [X] Test bench that reads txt.
-- [ ] Connect inputfifo, input memory and multiplier (multiplication stage)
+- [ ] Add fetch memory stage.
+- [X] Make Multiplication stage.
+- [ ] Test Multiplication stage.
 - [ ] Add ReLu comparator switch to input of multiplication stage
 - [ ] Connect output of multiplier to adder and output memory (accumulation stage)
-- [x] Data Exporting in fixed point for verilog.
+- [ ] Data Exporting in packets verilog. (make hex dump to not write 0x)
 - [ ] Controller.
 - [ ] Switch memories.
 - [ ] Read inputs to first memory.
