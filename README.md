@@ -17,10 +17,10 @@
 - [X] Single Port Ram.
 - [X] Memory Switch.
 - [X] Multiplicator.
-- [ ] Proper greedy quantization for fixed point.
-- [ ] Adder.
-- [ ] Test bench that reads txt.
+- [X] Proper greedy quantization for fixed point. 
+- [X] Test bench that reads txt.
 - [ ] Connect inputfifo, input memory and multiplier (multiplication stage)
+- [ ] Add ReLu comparator switch to input of multiplication stage
 - [ ] Connect output of multiplier to adder and output memory (accumulation stage)
 - [x] Data Exporting in fixed point for verilog.
 - [ ] Controller.
