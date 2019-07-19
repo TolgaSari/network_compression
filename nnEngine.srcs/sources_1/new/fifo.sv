@@ -1,7 +1,7 @@
 module io_generic_fifo
 #(
     parameter DATA_WIDTH = 32,
-    parameter BUFFER_DEPTH = 100000,
+    parameter BUFFER_DEPTH = 64,
     parameter LOG_BUFFER_DEPTH = $clog2(BUFFER_DEPTH)
 )
 (

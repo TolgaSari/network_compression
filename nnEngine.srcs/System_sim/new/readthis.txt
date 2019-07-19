@@ -1,0 +1,10 @@
+00000001
+0000000A
+0000AAAA
+6b6b6b6b
+b6b6b6b6
+ffffffff
+cccccccc
+b6b6b6b6
+ffffffff
+cccccccc
