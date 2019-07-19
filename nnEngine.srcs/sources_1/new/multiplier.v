@@ -47,6 +47,7 @@ module multiplier
     `else
     assign extended_num1 = {{3{num1[6]}}, num1[6:0], {6{1'b0}}};
     `endif
+    
     localparam temp_hi = DATA_WIDTH_OUT + FIXED_OUT - 1;
     localparam temp_low = FIXED_OUT;
     

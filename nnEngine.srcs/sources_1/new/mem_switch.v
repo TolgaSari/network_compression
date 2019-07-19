@@ -26,7 +26,7 @@ module mem_switch
     parameter DATA_WIDTH = 8,
     parameter NUM_WORDS  = 5
   )(
-    // Port A from Stage
+    // Port A to Stage
     input                      af_en_i,
     input   [ADDR_WIDTH-1:0]   af_waddr_i,
     input   [ADDR_WIDTH-1:0]   af_raddr_i,
@@ -34,7 +34,7 @@ module mem_switch
     input                      af_we_i,
     input   [DATA_WIDTH/8-1:0] af_be_i,
     output reg  [DATA_WIDTH-1:0]   af_rdata_o,
-    // Port B from Stage
+    // Port B to Stage
     input                      bf_en_i,
     input   [ADDR_WIDTH-1:0]   bf_waddr_i,
     input   [ADDR_WIDTH-1:0]   bf_raddr_i,
