@@ -130,7 +130,7 @@ def export_sparse_packets(sparse_layers):
                 value = (value & 255) << 24
                 row = row << 12
                 packet = value | row | col
-                f.write(str(packet) + "\n") # use hex(packet) to check
+                f.write(hex(packet)[2:] + "\n") # use hex(packet) to check
                 
         with open("sparse_network/sparse_bias_" + str(i), "w") as f:
             for j in range(len(sparse_layers[i][3])):

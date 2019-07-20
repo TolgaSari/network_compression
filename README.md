@@ -24,7 +24,7 @@
 - [ ] Test Multiplication stage.
 - [ ] Add ReLu comparator switch to input of multiplication stage
 - [ ] Connect output of multiplier to adder and output memory (accumulation stage)
-- [ ] Data Exporting in packets verilog. (make hex dump to not write 0x)
+- [X] Data Exporting in packets verilog. (make hex dump to not write 0x)
 - [ ] Controller.
 - [ ] Switch memories.
 - [ ] Read inputs to first memory.
