@@ -41,7 +41,7 @@
 - [X] Explain Fixed point.
 - [X] Explain run lenght encoding.
 - [ ] Do tests for 3 datasets for 3 networks (train, prune, quantize, encode).
-- [ ] Draw nnEngine Architecture.
+- [X] Draw nnEngine Architecture.
 - [ ] Explain modules.
-- [ ] Explain architecture.
+- [X] Explain architecture.
 - [ ] Do some estimations about speed up and energy efficiency.
