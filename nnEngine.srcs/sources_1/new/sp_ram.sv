@@ -11,7 +11,7 @@
 module sp_ram
   #(
     parameter ADDR_WIDTH = 12,
-    parameter DATA_WIDTH = 8,
+    parameter DATA_WIDTH = 16,
     parameter NUM_WORDS  = 5
   )(
     // Clock and Reset
@@ -22,16 +22,16 @@ module sp_ram
     input  logic [ADDR_WIDTH-1:0]   raddr_i,
     input  logic [DATA_WIDTH-1:0]   wdata_i,
     output logic [DATA_WIDTH-1:0]   rdata_o,
-    input  logic                    we_i,
-    input  logic [DATA_WIDTH/8-1:0] be_i
+    input  logic                    we_i
+    //input  logic [DATA_WIDTH/8-1:0] be_i
   );
 
-  localparam words = NUM_WORDS/(DATA_WIDTH/8);
+  localparam words = NUM_WORDS;
 
-  logic [DATA_WIDTH/8-1:0][7:0] mem[words];
-  logic [DATA_WIDTH/8-1:0][7:0] wdata;
-  logic [ADDR_WIDTH-1-$clog2(DATA_WIDTH/8):0] raddr;
-  logic [ADDR_WIDTH-1-$clog2(DATA_WIDTH/8):0] waddr;
+  logic [words-1:0][DATA_WIDTH-1:0] mem;
+  logic [DATA_WIDTH-1:0] wdata;
+  logic [ADDR_WIDTH-1:0] raddr;
+  logic [ADDR_WIDTH-1:0] waddr;
 
   integer i;
 
@@ -44,19 +44,18 @@ module sp_ram
     if (en_i && we_i)
     begin
       for (i = 0; i < DATA_WIDTH/8; i++) begin
-        if (be_i[i])
-          mem[waddr][i] <= wdata[i];
+          mem[waddr] <= wdata_i;
       end
     end
 
     rdata_o <= mem[raddr];
   end
 
-  genvar w;
-  generate for(w = 0; w < DATA_WIDTH/8; w++)
-    begin
-      assign wdata[w] = wdata_i[(w+1)*8-1:w*8];
-    end
-  endgenerate
+//  genvar w;
+//  generate for(w = 0; w < DATA_WIDTH/8; w++)
+//    begin
+//      assign wdata[w] = wdata_i[(w+1)*8-1:w*8];
+//    end
+//  endgenerate
 
 endmodule

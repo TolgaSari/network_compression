@@ -27,9 +27,7 @@ module test_fifo
     parameter LOG_BUFFER_DEPTH = $clog2(BUFFER_DEPTH),
     parameter CLK_PERIOD = 100
 )();
-    
 
-    
     reg                      clk_i;
     reg                      rstn_i;
     reg                      clr_i;
