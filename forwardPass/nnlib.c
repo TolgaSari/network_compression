@@ -3,6 +3,8 @@
 #include "nnlib.h"
 
 #define NR_END 1
+#define BITS 4
+#define WCOUNT 16
 
 void relu(vector *vec)
 {
@@ -20,21 +22,24 @@ void layer_pass(matrix* layer, vector* bias, vector* input, vector* output, floa
     for (col = 0; col < layer->shape[1]; col++)// columns of layer matrix = output nodes
     {
         #ifdef QUANTIZED
-            output->data[col] = qtable[bias->data[col]];// Add the bias first.
+            output->data[col] = qtable[(int)(bias->data[col])];// Add the bias first.
         #else
             output->data[col] = bias->data[col];// Add the bias first.
         #endif 
 
+
         for (row = 0; row < layer->shape[0]; row++)   // Rows of the layer matrix = input nodes
         {
             #ifdef QUANTIZED
-                output->data[col] += input->data[row] * qtable[layer->data[row][col]];
+                output->data[col] += input->data[row] * qtable[((int)layer->data[row][col])];
             #else
                 output->data[col] += input->data[row] * layer->data[row][col];
             #endif 
         }
+        //printf("%5d=%5f\n", col, output->data[col]);
     }
     relu(output);
+    
 }
 
 int forward_pass(network *nn, vector* input)
@@ -50,9 +55,11 @@ int forward_pass(network *nn, vector* input)
         buffers[x+1] = *create_vector(nn->layers[x].shape[1]);
     }
     
-    buffers[0] = *input;
+    //buffers[0] = *input;
     
-    for(x = 0; x < nn->layer_count; x++)
+    layer_pass(nn->layers, nn->biases, input, buffers + 1, nn->qtable);
+
+    for(x = 1; x < nn->layer_count; x++)
     {
         layer_pass(nn->layers + x, nn->biases + x, buffers + x, buffers + x + 1, nn->qtable);
     }
@@ -350,19 +357,39 @@ void compress_zeros(char* file_name)
                             if(read_data != 0)
                             {
                                 total_skips += zero_count;
-                                skip_count[zero_count >= 1024 ? 1023 : zero_count]++;
                                 col += zero_count + 1;
                                 break;
                             }
+                        }
+
+                        while(zero_count >= WCOUNT*WCOUNT-1)
+                        {
+                            zero_count -= WCOUNT*WCOUNT-1;
+                            fprintf(comp_file,"%d\n",0);
+                            fprintf(comp_file,"%d\n",0);
+                            fprintf(comp_file,"%d\n",WCOUNT-1);
+                            fprintf(comp_file,"%d\n",WCOUNT-1);
+                            skip_count[WCOUNT-1]++;
+                        }
+                        while(zero_count >= WCOUNT-1)
+                        {
+                            fprintf(comp_file,"%d\n",0);
+                            fprintf(comp_file,"%d\n",0);
+                            fprintf(comp_file,"%d\n",zero_count & (WCOUNT - 1));
+                            fprintf(comp_file,"%d\n",(zero_count >> BITS) & (WCOUNT - 1));
+                            skip_count[WCOUNT-1]++;
+                            zero_count = 0;
                         }
                         if(zero_count > 1)
                         {
                             fprintf(comp_file,"%d\n",0);
                             fprintf(comp_file,"%d\n",zero_count);
+                            skip_count[zero_count > WCOUNT-1 ? WCOUNT-1 : zero_count]++;
                         }
                         else
                         {
                             fprintf(comp_file,"%d\n", -9);
+                            skip_count[zero_count]++;
                         } 
 
                         fprintf(comp_file,"%d\n",read_data);
@@ -373,7 +400,7 @@ void compress_zeros(char* file_name)
         }
 
         fprintf(skip_histogram, "total skips = %5d\n", total_skips);
-        for(x = 1; x < 1024; x++)
+        for(x = 1; x < WCOUNT; x++)
         {
             fprintf(skip_histogram, "%5d skips = %5d\n", x, skip_count[x]);
         }
