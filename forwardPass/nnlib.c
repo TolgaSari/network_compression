@@ -361,7 +361,31 @@ void compress_zeros(char* file_name)
                                 break;
                             }
                         }
+                        
+                        // 21 lines
+                        while(zero_count >= WCOUNT*WCOUNT*WCOUNT-1)
+                        {
+                            zero_count -= WCOUNT*WCOUNT*WCOUNT-1;
+                            fprintf(comp_file,"%d\n",0);
+                            fprintf(comp_file,"%d\n",0);
+                            fprintf(comp_file,"%d\n",0);
+                            fprintf(comp_file,"%d\n",WCOUNT-1);
+                            fprintf(comp_file,"%d\n",WCOUNT-1);
+                            fprintf(comp_file,"%d\n",WCOUNT-1);
+                            skip_count[WCOUNT-1]++;
+                        }
+                        if(zero_count >= WCOUNT*WCOUNT-1) 
+                        {
+                            fprintf(comp_file,"%d\n",0);
+                            fprintf(comp_file,"%d\n",0);
+                            fprintf(comp_file,"%d\n",0);
+                            fprintf(comp_file,"%d\n",(zero_count >> BITS * 2) & (WCOUNT-1));
+                            fprintf(comp_file,"%d\n",(zero_count >> BITS * 1) & (WCOUNT-1));
+                            fprintf(comp_file,"%d\n",(zero_count >> BITS * 0) & (WCOUNT-1));
+                            zero_count = 0;
+                        }
 
+                        // 17 lines
                         while(zero_count >= WCOUNT*WCOUNT-1)
                         {
                             zero_count -= WCOUNT*WCOUNT-1;
@@ -371,15 +395,23 @@ void compress_zeros(char* file_name)
                             fprintf(comp_file,"%d\n",WCOUNT-1);
                             skip_count[WCOUNT-1]++;
                         }
-                        while(zero_count >= WCOUNT-1)
+                        if(zero_count >= WCOUNT-1) 
                         {
                             fprintf(comp_file,"%d\n",0);
                             fprintf(comp_file,"%d\n",0);
-                            fprintf(comp_file,"%d\n",zero_count & (WCOUNT - 1));
-                            fprintf(comp_file,"%d\n",(zero_count >> BITS) & (WCOUNT - 1));
-                            skip_count[WCOUNT-1]++;
+                            fprintf(comp_file,"%d\n",(zero_count >> BITS * 1) & (WCOUNT-1));
+                            fprintf(comp_file,"%d\n",(zero_count >> BITS * 0) & (WCOUNT-1));
                             zero_count = 0;
                         }
+
+                        while(zero_count >= WCOUNT-1)
+                        {
+                            zero_count -= WCOUNT-1;
+                            fprintf(comp_file,"%d\n",0);
+                            fprintf(comp_file,"%d\n",WCOUNT-1);
+                            skip_count[WCOUNT-1]++;
+                        }
+
                         if(zero_count > 1)
                         {
                             fprintf(comp_file,"%d\n",0);
@@ -388,7 +420,7 @@ void compress_zeros(char* file_name)
                         }
                         else
                         {
-                            fprintf(comp_file,"%d\n", -9);
+                            fprintf(comp_file,"%d\n", -WCOUNT/2);
                             skip_count[zero_count]++;
                         } 
 
